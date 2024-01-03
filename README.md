@@ -18,10 +18,7 @@
 
 [project page](#) | [arXiv](#)
 
-<video autoplay loop muted>
-    <source src="docs/resources/teaser_video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+<img src="docs/resources/teaser_gif.gif" width="100%"/>
 
 </div>
 
