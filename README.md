@@ -2,7 +2,7 @@
 
 <h1><i>V-IRL</i>: Grounding Virtual Intelligence in Real Life</h1>
 
-<p>tl;dr: We build a platform that enables agents to scalably interact with the real-world in a virtual yet realistic environment.</p>
+<!-- <p>tl;dr: We build a platform that enables agents to scalably interact with the real-world in a virtual yet realistic environment.</p> -->
 <div>
     <a href="https://jihanyang.github.io/" target="_blank">Jihan Yang</a><sup>1</sup>,</span>
     <a href="https://dingry.github.io/" target="_blank">Runyu Ding</a><sup>1</sup>,</span>
@@ -18,8 +18,28 @@
 
 [project page](#) | [arXiv](#)
 
-<img src="docs/resources/teaser_gif.gif" width="100%"/>
+<img src="docs/resources/teaser.png" width="100%"/>
 
 </div>
 
-Please stay tuned. Code will be coming soon...
+****
+
+Given the extensive contents introduced in *V-IRL*, we still need some time to re-organize the code.
+A basic version of the platform has been released, and will release agents and benchmarks in the near future.
+Please stay tuned...
+
+### Release Checklist
+- [x] Basic Platform Code 
+- [ ] Agents
+  - [ ] Peng
+  - [ ] Aria
+  - [ ] Vivek
+  - [ ] RX-399
+  - [ ] Imani
+  - [ ] Hiro
+  - [ ] Ling
+  - [ ] Local
+  - [ ] Diego
+- [ ] Benchmarks
+- [ ] Install & Deployment guideline
+- [ ] Platform Document
