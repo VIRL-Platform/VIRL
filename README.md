@@ -16,7 +16,7 @@
     <sup>2</sup>New York University
 </div>
 
-[project page](#) | [arXiv](#)
+[project page](https://virl-platform.github.io) | [arXiv](#)
 
 <img src="docs/resources/teaser.png" width="100%"/>
 
