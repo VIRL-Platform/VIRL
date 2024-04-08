@@ -4,7 +4,7 @@ Write a list of visible landmarks in the navigation instructions:
 
 Instructions: <{instruction}>
 
-You should answer me with a list in the format of:
+You should answer me with a ONLY list in the format of:
 ["landmark1", "landmark2", "landmark3"]
 """
 

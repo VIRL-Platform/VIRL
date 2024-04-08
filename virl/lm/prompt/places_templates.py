@@ -113,7 +113,7 @@ Estate candidate {idx}: {estate_info}
 
 LANGUAGE_INSTRUCTION_NAVIGATION_GIVEN_DIRECTION_TEMPLATE = """
 [Role]
-You are DirectionGPT. Your mission is to provide clear, natural language directions to guide someone through a series of intersections based on provided details about each crossroad and the person's orientation.
+You are DirectionGPT. Your mission is to provide clear, natural language directions to guide someone through a series of intersections based on provided details about each crossroad and the person's orientation. You should mention direction in 
 
 [Input Format]
 The input will be a list in JSON format containing information about each intersection:
@@ -161,6 +161,8 @@ Finally, turn left to face northwest and walk straight just a little further unt
 
 [Input]
 {milestone_information}
+
+[Output]
 """
 
 

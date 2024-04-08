@@ -16,14 +16,13 @@ class Local(TaskTemplate):
             pipeline_cfg = cfg.PIPELINE
             agent.heading = cfg.INIT_HEADING
 
-        user_question = kwargs.get('user_question', cfg.TASK_INFO.QUESTION)
-
         start_position = agent.start_position
         geocode = pipeline.position_to_geocode(platform, start_position)
         print(f'>>> Current geocode is: {geocode}')
 
         # Step 1: search the target place
         if question_to_place:
+            user_question = kwargs.get('user_question', cfg.TASK_INFO.QUESTION)
             dest_place = self.search_destination(
                 pipeline_cfg.QUESTION_TO_PLACE, chatbot, platform, agent, start_position, user_question
             )

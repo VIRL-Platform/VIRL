@@ -27,15 +27,15 @@ PLATFORM:
 
 AGENT:
   NAME: LING
-  CITY: New York
-  START_POSITION: [40.736294400898, -73.99343539662662]
+  CITY: San Francisco
+  START_POSITION: [37.7895198,-122.4062241]
   BACKGROUND: "Ling is a spirited traveler from Taipei who is always eager to explore new cities and cultures. She is unafraid of asking locals for help when she's lost!"
-  INTENTION: "Where's a good place to buy some gifts for my friends?"
+  INTENTION: "Find a place to repair her phone"
 
 
 PIPELINE:
   DATA:
-    ROUTE_PATH: ../data/tourist/route_infos_ny_moma.json
+    ROUTE_PATH: ../data/tourist/route_infos_sf_apple.json
 
   NAVIGATION:
     NAME: VisionLanguageNavigator
@@ -49,7 +49,7 @@ PIPELINE:
       # for visual observation only
       NAME: CLIP
       CANDIDATES: "æ,©,ø∆,¶,¬∂,®,others"
-      THRESH: 0.995
+      THRESH: 0.945
       # for oracle observation only
       ORACLE_RADIUS: 20
       KEYPOINT_RADIUS: 5
@@ -58,14 +58,14 @@ PIPELINE:
 
     ACTION_PRED:
       AUTO_REGRESSIVE: True
-      MODEL: gpt-4-1106-preview # gpt-4-0613
+      MODEL: gpt-4-0613 # gpt-4-1106-preview
       PROMPT: VLN_INTRO_TEMPLATE
 
     INTERRUPT:
       ENABLED: True
       STATIC_COUNTER: 5
-      OPPOSITE_COUNTER: 6
-      MAX_STEPS: 30
+      OPPOSITE_COUNTER: 9
+      MAX_STEPS: 35
 
     MAX_HEADING_DIFF: 20
 
@@ -82,7 +82,7 @@ PIPELINE:
     ROUTE_MODE: bicycling
     STOPOVER: False
 
-    RELOCATE: False
+    RELOCATE: True
 
   SELECT_LANDMARKS:
     MANNER: reviews_select # [llm_select, reviews_select]
@@ -98,7 +98,7 @@ PIPELINE:
   MILESTONE_INFO:
     SINGLE_PROMPT: SINGLE_INTERSECTION_GIVEN_DIRECTION_TEMPLATE
     ALL_INFO_PROMPT: LANGUAGE_INSTRUCTION_NAVIGATION_GIVEN_DIRECTION_TEMPLATE
-    MODEL: gpt-4-1106-preview # gpt-4-0613
+    MODEL: gpt-4-0613 # gpt-4-0613
 
   OUTPUT:
     ROUTE_PATH: plan_trajectory.html
@@ -106,8 +106,8 @@ PIPELINE:
     FILE_TEMPLATE: polyline_template
 
 TASK_INFO:
-  USER_QUESTION: "Where’s a good place to buy some gifts for my friends?"
-  LOCAL_AGENT_CFG: cfgs/local/local_nyc_case_1.yaml
+  USER_QUESTION: "Oh no, my iPhone screen just cracked!"
+  LOCAL_AGENT_CFG: cfgs/local/local_sf_iphone.yaml
 
   # local background information
   LOCAL_BACKGROUND: "I am a native guy. I am familiar with the city and can help others with their questions."

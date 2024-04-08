@@ -356,7 +356,7 @@ class VisionLanguageNavigator(NavigatorTemplate):
         # case 2: the agent keep moving to the wrong direction for a long time
         if len(self.trajectory) >= self.cfg.INTERRUPT.OPPOSITE_COUNTER:
             interrupt = True
-            idx = int(f'-{self.cfg.INTERRUPT.STATIC_COUNTER}')
+            idx = int(f'-{self.cfg.INTERRUPT.OPPOSITE_COUNTER}')
             previous_trajectory = self.trajectory[idx:]
             distance_matrix = geocode_utils.cal_distance_between_two_position_list(previous_trajectory, self.key_positions)
             for i in range(len(distance_matrix) - 1):

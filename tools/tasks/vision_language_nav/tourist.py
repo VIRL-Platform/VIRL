@@ -29,7 +29,6 @@ class Tourist(VLNTemplate):
         pipeline_cfg = cfg.PIPELINE
         
         # step 1: obtain the initial route
-        import ipdb; ipdb.set_trace(context=20)
         if self.current_route is None and pipeline_cfg.DATA.ROUTE_PATH != 'None':
             init_route = json.load(open(pipeline_cfg.DATA.ROUTE_PATH, 'r'))
             self.current_route = init_route
@@ -46,7 +45,6 @@ class Tourist(VLNTemplate):
                 pipeline_cfg, platform, chatbot, messager, agent, args, self.current_route
             )
 
-            import ipdb; ipdb.set_trace(context=20)
             if self.check_arrival(pipeline_cfg.EVAL_VLN, results, self.current_route):
                 break
             
@@ -62,14 +60,14 @@ class Tourist(VLNTemplate):
             )
 
             os.rename(self.output_dir / 'navigator.pkl', self.output_dir / f'navigator_{self.attempt_counter}.pkl')
-            import ipdb; ipdb.set_trace(context=20)
+
             self.attempt_counter += 1
             print(f'>>> {self.attempt_counter} new route is: ')
             print(self.current_route['instruction'])
             self.save_results()
 
     def ask_new_route_single(self, pipeline_cfg, platform, agent, chatbot, messager, args, start_position,
-                             heading, dest_place, question_to_place=True, cfg_file_path=None):
+                             heading, dest_place, question_to_place=False, cfg_file_path=None):
         new_agent_cfg = {
             'NAME': agent.name,
             'CITY': agent.city,
@@ -89,7 +87,7 @@ class Tourist(VLNTemplate):
         task_solver = Local(output_dir=self.output_dir, logger=self.logger)
         route_info = task_solver.run(
             platform, new_agent, chatbot, messager, args, pipeline_cfg=new_pipeline_cfg,
-            question_to_place=question_to_place, dest_place=dest_place, user_question=cfg.TASK_INFO.QUESTION
+            question_to_place=question_to_place, dest_place=dest_place, user_question=cfg.TASK_INFO.USER_QUESTION
         )
 
         return route_info
