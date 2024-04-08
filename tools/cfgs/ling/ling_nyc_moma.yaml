@@ -1,0 +1,115 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: VLNMultiround
+SAVE_INTERVAL: 1
+INIT_HEADING: 0
+
+
+PLATFORM:
+  MOVER:
+    STREET_VIEW_QUERY: True
+    RADIUS_QUERY:
+      ENABLED: True
+      CONDITION_HEADING_RANGE: 30
+      MAX_RADIUS: 10
+      DELTA_RADIUS: 3
+      DELTA_HEADING: 45
+      HEADING_RANGE: 10 
+
+  STREET_VIEW:
+    SIZE: [ 640, 640 ]
+    HEADING: 0
+    PITCH: 0
+    FOV: 45
+    SOURCE: outdoor
+    HEADING_RANGE:  360
+
+
+AGENT:
+  NAME: LING
+  CITY: New York
+  START_POSITION: [40.736294400898, -73.99343539662662]
+  BACKGROUND: "Ling is a spirited traveler from Taipei who is always eager to explore new cities and cultures. She is unafraid of asking locals for help when she's lost!"
+  INTENTION: "Where's a good place to buy some gifts for my friends?"
+
+
+PIPELINE:
+  DATA:
+    ROUTE_PATH: ../data./tourist/route_infos_ny_moma.json
+
+  NAVIGATION:
+    NAME: VisionLanguageNavigator
+
+    LANDMARK_EXTRACT:
+      PROMPT: LANDMARK_EXTRACT_TEMPLATE
+      MODEL: gpt-4-1106-preview # gpt-4-0613
+
+    LANDMARK_DETECT:
+      MANNER: visual # [visual, oracle]
+      # for visual observation only
+      NAME: CLIP
+      CANDIDATES: "æ,©,ø∆,¶,¬∂,®,others"
+      THRESH: 0.995
+      # for oracle observation only
+      ORACLE_RADIUS: 20
+      KEYPOINT_RADIUS: 5
+
+      INTERSECTION_VALID_RADIUS: 5
+
+    ACTION_PRED:
+      AUTO_REGRESSIVE: True
+      MODEL: gpt-4-1106-preview # gpt-4-0613
+      PROMPT: VLN_INTRO_TEMPLATE
+
+    INTERRUPT:
+      ENABLED: True
+      STATIC_COUNTER: 5
+      OPPOSITE_COUNTER: 6
+      MAX_STEPS: 30
+
+    MAX_HEADING_DIFF: 20
+
+    OUTPUT:
+      ROUTE_PATH: plan_trajectory.html
+      TRAJ_PATH: trajectory.html
+      FILE_TEMPLATE: polyline_template
+  
+  EVAL_VLN:
+    SUCCESS_RADIUS: 25
+
+  # Below are the pipeline for generate the route
+  ROUTE:
+    ROUTE_MODE: bicycling
+    STOPOVER: False
+
+    RELOCATE: False
+
+  SELECT_LANDMARKS:
+    MANNER: reviews_select # [llm_select, reviews_select]
+    RADIUS: 18
+
+    # for llm_select manner
+    PROMPT: ELLIS_SELECT_LANDMARKS_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+    # for reviews_select manner
+    MIN_REVIEWS: 10
+
+  MILESTONE_INFO:
+    SINGLE_PROMPT: SINGLE_INTERSECTION_GIVEN_DIRECTION_TEMPLATE
+    ALL_INFO_PROMPT: LANGUAGE_INSTRUCTION_NAVIGATION_GIVEN_DIRECTION_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+  OUTPUT:
+    ROUTE_PATH: plan_trajectory.html
+    TRAJ_PATH: trajectory.html
+    FILE_TEMPLATE: polyline_template
+
+TASK_INFO:
+  USER_QUESTION: "Where’s a good place to buy some gifts for my friends?"
+  LOCAL_AGENT_CFG: cfgs/local/local_nyc_case_1.yaml
+
+  # local background information
+  LOCAL_BACKGROUND: "I am a native guy. I am familiar with the city and can help others with their questions."
+  LOCAL_INTENTION: "I would like to help others to find their ways."
+

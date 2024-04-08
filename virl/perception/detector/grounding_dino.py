@@ -10,7 +10,7 @@ from virl.utils import common_utils, vis_utils
 
 
 class GroundingDINO(object):
-    def __init__(self, cfg) -> None:
+    def __init__(self, cfg, **kwargs) -> None:
         super().__init__(cfg)
         self.model = load_model(cfg.CFG_FILE, cfg.CKPT_FILE, device='cuda')
         self.BOX_THRESHOLD = cfg.BOX_THRESHOLD

@@ -24,22 +24,51 @@
 
 ****
 
-Given the extensive contents introduced in *V-IRL*, we still need some time to re-organize the code.
-A basic version of the platform has been released, and will release agents and benchmarks in the near future.
-Please stay tuned...
+### Changelog
+[2024-03-xx] **NEW!!** Release code for agents and install & Deployment guideline.
+[2024-02-06] Release basic platform code.
 
 ### Release Checklist
 - [x] Basic Platform Code 
-- [ ] Agents
-  - [ ] Peng
-  - [ ] Aria
-  - [ ] Vivek
-  - [ ] RX-399
-  - [ ] Imani
-  - [ ] Hiro
-  - [ ] Ling
-  - [ ] Local
-  - [ ] Diego
+- [x] Agents
+  - [x] Peng
+  - [x] Aria
+  - [x] Vivek
+  - [x] RX-399
+  - [x] Imani
+  - [x] Hiro
+  - [x] Ling
+  - [x] Local
+  - [x] Diego
 - [ ] Benchmarks
-- [ ] Install & Deployment guideline
+- [x] Install & Deployment guideline
 - [ ] Platform Document
+
+
+
+### Installation
+Please refer to [INSTALL.md](./docs/INSTALL.md) for installation of `V-IRL`
+
+
+### Getting Started
+Please refer to [GETTING_STARTED.md](./docs/GETTING_STARTED.md) to learn more usage about this project.
+
+
+### FQA
+Please refer to [FQA.md](./docs/FQA.md) to learn solution for some potential issues.
+
+
+### Citation
+If you find this project useful in your research, please consider cite:
+```
+@article{yang2024virl,
+  title={{V-IRL: Grounding Virtual Intelligence in Real Life}},
+  author={Yang, Jihan and Ding, Runyu and Brown, Ellis and Qi, Xiaojuan and Xie, Saining},
+  year={2024},
+  journal={arXiv preprint arXiv:2402.03310},
+}
+```
+
+
+
+

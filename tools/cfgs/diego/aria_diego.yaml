@@ -1,0 +1,40 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: PlaceRecommender
+
+AGENT:
+  NAME: Aria
+  CITY: New York
+  INTENTION: "Pick out a lunch spot that Peng might like."
+  BACKGROUND: "A 3rd year graduate student who loves to try new restaurants. She is 
+               always looking for new places to try, and shares her favorite spots on her blog!"
+  START_POSITION: New York University
+
+PIPELINE:
+  INTENT_TO_PLACE:
+    PROMPT: INTENTION_TO_PLACE_TEMPLATE # For intention to place only
+
+  SEARCH_NEARBY:
+    RANKING: rating
+    RADIUS_CUSTOM: 1000
+    TOPK: 3 # subsample candidate places to reduce LLM cost...
+
+  PLACE_INTRO:
+    MANNER: summarize_reviews
+
+    N_REVIEW: 5 # N reviews as summarization reference
+    SUMMARIZE_PROMPT: PLACE_REVIEW_SUMMARIZE_TEMPLATE
+    REVIEW_PROMPT: SINGLE_PLACE_REVIEW_TEMPLATE
+
+  RATING:
+    PROMPT: PLACE_RATING_TEMPLATE
+    MODEL: gpt-4-0125-preview # gpt-4-0613
+
+TASK_INFO:
+  AGENT:
+    NAME: Peng
+    CITY: New York
+    INTENTION: "It is time for lunch, so Peng wants to find a restaurant."
+    BACKGROUND: "Peng is a first-year undergraduate student at NYU studying 
+                 Computer Science. He was born and grew up in Chengdu, Sichuan."
+    START_POSITION: New York University

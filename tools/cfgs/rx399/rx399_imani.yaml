@@ -1,0 +1,82 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: RobotRX399
+SAVE_INTERVAL: 1
+
+PLATFORM:
+  STREET_VIEW:
+    SIZE: [ 640, 640 ]
+    HEADING: 0
+    PITCH: 0
+    FOV: 60
+    SOURCE: outdoor
+    HEADING_RANGE:  180
+
+AGENT:
+  NAME: RX399
+  CITY: New York
+  START_POSITION: [40.73238520347835, -74.00170573874809]
+  BACKGROUND: "RX-399 is a robot with advanced detection, localization, and navigation systems."
+  INTENTION: "Localize and count pre-defined categories to the user in specified regions."
+
+
+MEMORY:
+  PATH: visual_memory
+  BUILD_FROM_EXIST: False
+
+PIPELINE:
+  NAVIGATION:
+    NAME: RouteNavigator
+
+    POLYGON_PATH: ../data/urban_plan/full_central_park.txt
+    POINT_PATH: ../data/urban_plan/relocated_points.txt
+    ROUTE_PATH: None
+    TSP_ALGO: nn
+
+    OUTPUT:
+      ROUTE_PATH: plan_trajectory.html
+      TRAJ_PATH: trajectory.html
+      FILE_TEMPLATE: polyline_template
+
+  CHECK_SURROUNDING:
+    USED_MODELS: [DETECT, LIGHTGLUE]
+    CARED_LABELS: ['trash bin', 'hydrant', 'bench']
+    # categories that only serve as background reference
+    CANDIDATES: 'building, car, people, chair, desk, sign, traffic light, cyclist, others'
+
+    DETECT:
+      NAME: GLIP
+      PROPOSAL_SCORES: 0.55
+
+      ADJUST_CAMERA:
+        ENABLED: True
+        MIN_FOV: 30
+        ENLARGE_RATIO: 4
+
+      # only double check after adjusting camera view
+      DOUBLE_CHECK:
+        ENABLED: True
+        CHECK_SCORES: 0.65
+
+      FILTER:
+        ENABLED: False
+        BOX_SIZE: 1000
+
+    CHECK_DUPLICATE:
+      ENABLED: True
+      FAST_CHECK_RADIUS: 10
+      CHECK_WITH_GEO_HEADING: False
+      RETRIEVE_RADIUS: 30
+      HEADING_NOISE_RADIUS: 10
+
+      # for feature matching
+      CHECK_WITH_FM: True
+      MATCH_THRESHOLD: 100
+
+  EVALUATION:
+    ENABLED: False
+    GT_PATH: None
+    RADIUS: 15
+
+  OUTPUT:
+    HEATMAP_DATA: heatmap_data.txt

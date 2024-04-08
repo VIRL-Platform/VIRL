@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from virl.utils import common_utils
 
 
@@ -8,34 +10,25 @@ class MultiModalLLM(object):
         self.model = self.create_mm_llm(name)
 
     def create_mm_llm(self, name):
-        mm_llm_cfg = getattr(self.model_cfg, name)
-        if name == 'InstructBLIP':
-            from .instructblip_client import InstructBLIPClient
-            model = InstructBLIPClient(mm_llm_cfg)
-        elif name == 'Otter':
-            from .otter import Otter
-            model = Otter(mm_llm_cfg)
-        elif name == 'LLaVA':
-            from .llava_client import LLaVA
-            model = LLaVA(mm_llm_cfg)
-        elif name == 'mPLUG_Owl':
-            from .mplug_owl_client import mPLUG_Owl
-            model = mPLUG_Owl(mm_llm_cfg)
-        elif name == 'internLLM_XComposer':
-            from .internllm_xcomposer_client import InternLLM_XComposer
-            model = InternLLM_XComposer(mm_llm_cfg)
-        elif name == 'BLIP2':
-            from .blip2_local import BLIP2
-            model = BLIP2(mm_llm_cfg)
-        elif name == 'InstructBLIPLocal':
-            from .instructblip_local import InstructBLIPLocal
-            model = InstructBLIPLocal(mm_llm_cfg)
-        elif name == 'MiniGPT4':
-            from .minigpt4_client import MiniGPT4Client
-            model = MiniGPT4Client(mm_llm_cfg)
-        elif name == 'Shikra':
-            from .shikra_client import ShikraClient
-            model = ShikraClient(mm_llm_cfg)
+        # Mapping of model names to their respective class imports
+        model_mapping = {
+            'InstructBLIP': ('.instructblip_client', 'InstructBLIPClient'),
+            'Otter': ('.otter', 'Otter'),
+            'LLaVA': ('.llava_client', 'LLaVA'),
+            'mPLUG_Owl': ('.mplug_owl_client', 'mPLUG_Owl'),
+            'internLLM_XComposer': ('.internllm_xcomposer_client', 'InternLLM_XComposer'),
+            'BLIP2': ('.blip2_local', 'BLIP2'),
+            'InstructBLIPLocal': ('.instructblip_local', 'InstructBLIPLocal'),
+            'MiniGPT4': ('.minigpt4_client', 'MiniGPT4Client'),
+            'Shikra': ('.shikra_client', 'ShikraClient'),
+            'GPT4V': ('.gpt4v', 'GPT4V'),
+        }
+
+        if name in model_mapping:
+            module_name, class_name = model_mapping[name]
+            module = import_module(module_name, package=__package__)
+            model_class = getattr(module, class_name)
+            model = model_class(getattr(self.model_cfg, name))
         else:
             model = None
 

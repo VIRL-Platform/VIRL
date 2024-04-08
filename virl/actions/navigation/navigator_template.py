@@ -13,8 +13,6 @@ class NavigatorTemplate(object):
         self.current_geocode = pipeline.position_to_geocode(self.platform, start_location)
         self.current_heading = None
 
-        if not kwargs.get('no_init_mover', False):
-            platform.initialize_mover(initial_geocode=self.current_geocode)
         self.trajectory = [self.current_geocode]
 
         # the counter for going back
@@ -34,7 +32,7 @@ class NavigatorTemplate(object):
         self.actions_before_moving(info_dict)
 
         if self.check_stop(info_dict):
-            self.show_trajectory_on_the_map(self.trajectory, self.output_dir / self.cfg.OUTPUT.TRAJ_PATH)
+            self.show_trajectory_on_the_map()
             print('>>> PointNavigator: Finish navigation')
             self.actions_before_stop(info_dict)
             return True, self.current_geocode, info_dict
@@ -100,8 +98,9 @@ class NavigatorTemplate(object):
 
         return end_geocode, way_points
 
-    def show_trajectory_on_the_map(self, trajectory, path):
-        polyline = geocode_utils.encode_polyline(trajectory)
+    def show_trajectory_on_the_map(self):
+        path = self.output_dir / self.cfg.OUTPUT.TRAJ_PATH
+        polyline = geocode_utils.encode_polyline(self.trajectory)
         pipeline.show_polyline_on_the_map(
             self.platform, polyline, path, self.cfg.OUTPUT.FILE_TEMPLATE
         )
@@ -130,6 +129,9 @@ class NavigatorTemplate(object):
             'observation_list': getattr(self, 'observation_list', None),
             'oracle_observation_list': getattr(self, 'oracle_observation_list', None),
             'target_heading': getattr(self, 'target_heading', None),
+            # intention navigator
+            'from_road_idx': getattr(self, 'from_road_idx', None),
+            'from_road_heading': getattr(self, 'from_road_heading', None)
         }
         output_path = self.output_dir / 'navigator.pkl'
         with open(output_path, 'wb') as f:
@@ -165,3 +167,7 @@ class NavigatorTemplate(object):
         self.action_list = result_dict.get('action_list', None)
         self.oracle_observation_list = result_dict.get('oracle_observation_list', None)
         self.target_heading = result_dict.get('target_heading', None)
+
+        # intention navigator
+        self.from_road_idx = result_dict.get('from_road_idx', None)
+        self.from_road_heading = result_dict.get('from_road_heading', None)

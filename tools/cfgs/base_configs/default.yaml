@@ -1,0 +1,103 @@
+###############
+# LLM Configs
+###############
+
+GPT:
+  MODEL: gpt-3.5-turbo
+  MAX_TOKENS: 2000
+  TEMPERATURE: 0.0
+#  FREQUENCY_PENALTY: 0.0
+#  PRESENCE_PENALTY: 0.6
+
+  RETRY_TIME: 1
+
+AZURE_GPT:
+  MODEL: chatgpt-4
+  MAX_TOKENS: 100
+  TOP_P: 1
+  TEMPERATURE: 0
+  FREQUENCY_PENALTY: 0.0
+  PRESENCE_PENALTY: 0.0
+  STOP_TOKENS: ["\n"]
+
+  RETRY_TIME: 10
+
+LLM:
+  NAMES: [GPT, AzureGPT]
+  DEFAULT: GPT
+
+
+########################
+# Vision Model Configs
+#######################
+VISION_MODELS:
+  NAME_LIST: ["GLIP", "LIGHTGLUE", "GPT4V", "CLIP", "EvaCLIP", "LLaVA"]
+
+  GLIP:
+    ENABLED: True
+    ROOT_PATH: ../../GLIP
+    MODEL_SIZE: large  # [tiny, large]
+    # for GLIP CLIENT ONLY
+    SERVER: http://147.8.181.77:22410
+  
+  LIGHTGLUE:
+    SERVER: http://147.8.181.77:22411
+
+  GPT4V:
+    PLACEHOLDER: True 
+  
+  NAME_LIST: ["CLIP", "EvaCLIP", "LLaVA"]
+
+  CLIP:
+    SERVER: http://147.8.181.77:22380/
+  
+  EvaCLIP:
+    MODEL_NAME: EVA02-CLIP-bigE-14-plus
+    MODEL_PATH: /home/dwp/weipeng/Code/EVA/EVA-CLIP/rei
+
+  LLaVA:
+    MODEL_PATH: /home/deng/jihan/LLaVA/llava-v1.5-7b
+    MODEL_BASE: 
+    LOAD_8BIT: False
+    LOAD_4BIT: False
+    CONV_MODE: 
+    TEMPERATURE: 0.2
+    MAX_NEW_TOKENS: 512
+
+
+#################
+# UI Configs
+################
+UI:
+  ENABLED: True
+  PORT: 5000
+  HOST: 127.0.0.1
+
+
+###################
+# Platform configs
+##################
+
+PLATFORM:
+  STREET_VIEW:
+    SIZE: [ 640, 640 ]
+    HEADING: 0
+    PITCH: 0
+    FOV: 60
+    SOURCE: outdoor
+  
+  MOVER:
+    WEB_DRIVER_PATH: /home/jihan/chromedriver
+    FILE_TEMPLATE: panorama_no_street_view_template
+    HEADLESS: False
+
+    # moving query mode
+    STREET_VIEW_QUERY: True
+    RADIUS_QUERY:
+      ENABLED: True
+      CONDITION_HEADING_RANGE: 30
+      MAX_RADIUS: 10
+      DELTA_RADIUS: 3
+      DELTA_HEADING: 45
+      HEADING_RANGE: 20
+

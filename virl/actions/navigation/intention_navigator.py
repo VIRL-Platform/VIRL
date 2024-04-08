@@ -1,7 +1,8 @@
+import os
 import numpy as np
 
 from virl.config import cfg
-from virl.utils import common_utils, pipeline
+from virl.utils import common_utils, pipeline, geocode_utils
 from virl.lm import UnifiedChat
 from virl.lm import prompt as prompt_templates
 from virl.perception.mm_llm import MultiModalLLM
@@ -12,17 +13,50 @@ class IntentionNavigator(NavigatorTemplate):
     def __init__(self, nav_cfg, platform, messager, start_location, output_dir, intention, **kwargs):
         super().__init__(nav_cfg, platform, messager, start_location, output_dir, **kwargs)
 
-        self.from_road_idx = 'N/A'
-        self.from_road_heading = None
-
         if nav_cfg.get('MM_LLM', None):
             self.mm_llm = MultiModalLLM(cfg.VISION_MODELS, nav_cfg.MM_LLM)
         else:
             self.mm_llm = None
         self.intention = intention
+        
+        if os.path.exists(os.path.join(output_dir, 'navigator.pkl')):
+            self.resume_navigator(output_dir)
+            self.platform.initialize_mover(initial_geocode=self.current_geocode)
+            return
+        
+        self.from_road_idx = 'N/A'
+        self.from_road_heading = None
+        self.platform.initialize_mover(initial_geocode=self.current_geocode)
 
     def move(self, info_dict):
         direction_image_list, heading_list = self.get_suitable_images_for_direction()
+        info_dict['direction_image_list'] = direction_image_list
+        info_dict['heading_list'] = heading_list
+        
+        if len(direction_image_list) > 2 or self.cfg.DECIDE_ALL or self.current_heading is None:
+            moving_direction_idx = self.move_with_road_selection(info_dict)
+        else:
+            moving_direction_idx = self.move_with_momentum(info_dict)
+        
+        self.from_road_heading = heading_list[moving_direction_idx]
+
+        # Step 5.2: Move to the next location
+        self.platform.mover.adjust_heading_web(heading_list[moving_direction_idx])
+        self.current_geocode = self.platform.mover.move(idx=moving_direction_idx)
+        self.current_heading = heading_list[moving_direction_idx]
+        print(f'>>> IntentionNavigator: after moving, the geocode is: {self.current_geocode}')
+
+    def move_with_momentum(self, info_dict):
+        heading_list = info_dict['heading_list']
+        
+        moving_direction_idx = geocode_utils.select_argmin_heading_from_heading_list(self.current_heading, heading_list)
+        
+        return moving_direction_idx
+    
+    def move_with_road_selection(self, info_dict):
+        heading_list = info_dict['heading_list']
+        direction_image_list = info_dict['direction_image_list']
+        
         # calculate the from_road_idx
         if self.from_road_heading is not None:
             all_headings = np.array(heading_list)
@@ -30,18 +64,26 @@ class IntentionNavigator(NavigatorTemplate):
             heading_diff = np.abs(((all_headings - 180) % 360) - self.from_road_heading)
             heading_diff = np.where(heading_diff > 180, 360 - heading_diff, heading_diff)
             self.from_road_idx = np.argmin(heading_diff)
+            
+            # remove the from_road_idx from the heading_list
+            heading_list = np.delete(heading_list, self.from_road_idx)
+            direction_image_list = np.delete(direction_image_list, self.from_road_idx)
 
-        moving_direction_idx = self.get_moving_direction_idx_by_llm(direction_image_list)
-
-        import ipdb; ipdb.set_trace(context=20)
-        print(moving_direction_idx)
-        self.from_road_heading = heading_list[moving_direction_idx]
-
-        # Step 5.2: Move to the next location
-        self.current_geocode = self.platform.mover.move(idx=moving_direction_idx)
-        self.current_heading = heading_list[moving_direction_idx]
-        print(f'>>> IntentionNavigator: after moving, the geocode is: {self.current_geocode}')
-
+        # Get the moving direction
+        if self.cfg.MODE == 'caption_and_select':
+            moving_direction_idx = self.get_moving_direction_idx_by_caption(direction_image_list)
+        elif self.cfg.MODE == 'all_in_one':
+            moving_direction_idx = self.get_moving_direction_idx_by_multi_image(direction_image_list)
+        else:
+            raise ValueError('Invalid mode for intention navigator to deicde the road: {}'.format(self.cfg.MODE))
+        
+        # add the from_road_idx back
+        if self.from_road_heading is not None:
+            if moving_direction_idx >= self.from_road_idx:
+                moving_direction_idx += 1
+            heading_list = np.insert(heading_list, self.from_road_idx, self.from_road_heading)
+        return moving_direction_idx
+    
     def check_stop(self, info_dict):
         return info_dict['find_result']
 
@@ -68,7 +110,7 @@ class IntentionNavigator(NavigatorTemplate):
 
         return direction_image_list, heading_list
 
-    def get_moving_direction_idx_by_llm(self, direction_image_list):
+    def get_moving_direction_idx_by_caption(self, direction_image_list):
         all_road_descriptions = ""
         road_description_template = getattr(prompt_templates, self.cfg.DESCRIPTION.PROMPT)
         caption_prompt_template = getattr(prompt_templates, self.cfg.CAPTION.PROMPT)
@@ -103,6 +145,16 @@ class IntentionNavigator(NavigatorTemplate):
 
         idx = int(answer_json['idx'])
         return idx
+
+    def get_moving_direction_idx_by_multi_image(self, direction_image_list):
+        decision_template = getattr(prompt_templates, self.cfg.DECISION.PROMPT)
+        prompt = decision_template.format(intention=self.intention)
+        image_list = [img.image for img in direction_image_list]
+        answer = self.mm_llm.check(image_list, prompt, return_json=False)
+        answer_json = common_utils.parse_answer_to_json(answer)
+        road_idx = int(answer_json['idx']) - 1
+
+        return road_idx
 
     def set_mm_llm(self, mm_llm):
         self.mm_llm = mm_llm

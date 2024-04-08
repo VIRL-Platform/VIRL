@@ -20,3 +20,4 @@ langchain
 google-search-results
 webdriver_manager
 shapely
+ipdb

@@ -1,0 +1,57 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: InteractiveConcierge
+
+AGENT:
+  NAME: Diego
+  CITY: New York
+  START_POSITION: New York University (New York, NY)
+  BACKGROUND: "Diego is an expert concierge at a hotel. He's a master at creating intricate itineraries and providing valuable local advice."
+  INTENTION: "Plan personalized and practical itinerary for customer!"
+
+PIPELINE:
+  INITIAL_PLAN:
+    PROMPT: PLAN_DAY_ITERATIVE_TEMPLATE
+    MODEL: gpt-4-1106-preview  # gpt-4-0613
+
+  TRANSPORT_CHECK:
+    TRANSPORT_MODE_PROMPT: ACTIVITY_TO_TRANSPORT_MODE_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-3.5-turbo-0613
+
+  FIND_RESTAURANT:
+    TASK_NAME: PlaceRecommender
+    CFG_PATH: cfgs/diego/aria_diego.yaml
+
+  REVIEW_STATUS:
+    MEASURE_PROMPT: PLAN_DAY_REVIEW_STATUS_ITERATIVE_NO_PRIOR_6_STATUS_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+  REVISE_PLAN:
+    MODIFY_JUDGE_PROMPT: PLAN_DAY_ITERATIVE_MODIFY_JUDGE_6_STATUS_TEMPLATE
+    MODIFY_PROMPT: PLAN_DAY_ITERATIVE_MODIFY_WITH_USER_INPUT_6STATUS_TEMPLATE 
+
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+    USER_INPUT: False # take user input for revise plan or not
+    USER_STATUS: False # take user status for revise plan or not
+
+    N_PREVIOUS: 3
+
+TASK_INFO:
+  BUDGET: 120
+
+  AGENT:
+    NAME: peng
+    CITY: New York
+    START_POSITION: New York University (New York, NY)
+    BACKGROUND: "Peng is a first-year undergraduate student at NYU studying Computer Science. He was born and grew up in Chengdu, Sichuan."
+    INTENTION: "After four months in New York and having explored most of the well-known landmarks, Peng now wishes to spend this weekend exploring some lesser-known, tranquil spots away from the usual tourist trails."
+
+    STATUS:
+      STRESS: 50
+      JOY: 30
+      SADNESS: 0
+
+      HUNGER: 20
+      ENERGY: 80
+      PAIN: 0

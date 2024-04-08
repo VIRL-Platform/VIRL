@@ -7,7 +7,7 @@ from .navigator_template import NavigatorTemplate
 
 class RouteNavigator(NavigatorTemplate):
     def __init__(self, cfg, platform, messager, start_location, output_dir, **kwargs):
-        super().__init__(cfg, platform, messager, start_location, output_dir, no_init_mover=True, **kwargs)
+        super().__init__(cfg, platform, messager, start_location, output_dir, **kwargs)
         
         if os.path.exists(os.path.join(output_dir, 'navigator.pkl')):
             self.resume_navigator(output_dir)

@@ -30,21 +30,22 @@ class Detector(object):
         Args:
             vision_model_cfg (_type_): _description_
         """
-        if self.detect_cfg.NAME == 'GLIP':
-            from virl.perception.detector.glip_client import GLIPClient
+        detector_mapping = {
+            'GLIP': ('virl.perception.detector.glip_client', 'GLIPClient'),
+            'GLIP_CLIP': ('virl.perception.detector.glip_clip_client', 'GLIPCLIPClient'),
+            'GroundingDINO': ('virl.perception.detector.grounding_dino', 'GroundingDINO'),
+            'OWL_VIT': ('virl.perception.detector.owl_vit', 'OWLVIT')
+        }
+
+        if self.detect_cfg.NAME in detector_mapping:
+            module_name, class_name = detector_mapping[self.detect_cfg.NAME]
+            module = __import__(module_name, fromlist=[class_name])
+            detector_class = getattr(module, class_name)
+
             devices = "cuda" if torch.cuda.is_available() else "cpu"
-            self.model = GLIPClient(vision_model_cfg.GLIP, devices=devices)
-        elif self.detect_cfg.NAME == 'GLIP_CLIP':
-            from virl.perception.detector.glip_clip_client import GLIPCLIPClient
-            self.model = GLIPCLIPClient(vision_model_cfg.GLIP_CLIP)
-        elif self.detect_cfg.NAME == 'GroundingDINO':
-            from virl.perception.detector.grounding_dino import GroundingDINO
-            self.model = GroundingDINO(vision_model_cfg.GroundingDINO)
-        elif self.detect_cfg.NAME == 'OWL_VIT':
-            from virl.perception.detector.owl_vit import OWLVIT
-            self.model = OWLVIT(vision_model_cfg.OWL_VIT)
+            self.model = detector_class(getattr(vision_model_cfg, self.detect_cfg.NAME), devices=devices)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"Detector {self.detect_cfg.NAME} is not implemented.")
 
     def detect(self, image, candidates, cared_labels, score_thresh, need_draw):
         results, _ = self.model.inference(image, candidates, score_thresh, need_draw)
@@ -94,7 +95,7 @@ class Detector(object):
         is_detected = detect_results['labels'].shape[0] > 0
         if is_detected:
             object_views, is_detected_final, detect_results = self.adjust_camera_to_recheck_detection_result(
-                street_image, detect_results, candidates
+                street_image, detect_results, candidates, adjust_camera=self.detect_cfg.ADJUST_CAMERA.ENABLED
             )
             is_detected = is_detected_final and is_detected
         else:
@@ -175,12 +176,14 @@ class Detector(object):
         )
 
         # double check
+        # import ipdb; ipdb.set_trace(context=20)
         if self.need_double_check:
             detect_result, result_image_str = self.double_check(new_image, candidates, refer_label=label)
             # send the detected images to HTML
             self.messager.send_image(
                 'send_image', f'detectImages{new_image.i + 1}', result_image_str
             )
+            # import ipdb; ipdb.set_trace(context=20)
         else:
             detect_result = {
                 'boxes': box,

@@ -11,7 +11,7 @@ from virl.lm import prompt as prompt_templates
 
 class PointNavigator(NavigatorTemplate):
     def __init__(self, cfg, platform, messager, start_location, output_dir, **kwargs):
-        super().__init__(cfg, platform, messager, start_location, output_dir, no_init_mover=True, **kwargs)
+        super().__init__(cfg, platform, messager, start_location, output_dir, **kwargs)
 
         self.way_points = None
         self.end_geocode = None

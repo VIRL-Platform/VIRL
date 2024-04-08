@@ -28,7 +28,7 @@ class GoogleMapAPI(object):
             'place_photos': 'https://maps.googleapis.com/maps/api/place/photo'
         }
 
-    def get_geocode_from_address(self, address: str) -> tuple:
+    def get_geocode_from_address(self, address: str, language='en') -> tuple:
         """
         Parse natural language address to geocode, a.k.a latitude and longitude
 
@@ -41,18 +41,22 @@ class GoogleMapAPI(object):
             (latitude, longitude)
         """
         base_url = self.base_urls['geocode']
-        # example url:
-        # https://maps.googleapis.com/maps/api/geocode/json?address=the%20university%20of%20hong%20kong&key=APIKEY
         url = f'{base_url}?address={address}&key={self.key}'
 
-        response_json = requests.request("GET", url, headers={}, data={}).json()
+        params = {
+            'address': address,
+            'language': language,
+            'key': self.key
+        }
+
+        response_json = requests.get(base_url, params=params).json()
 
         latitude = response_json['results'][0]['geometry']['location']['lat']
         longitude = response_json['results'][0]['geometry']['location']['lng']
 
         return latitude, longitude
 
-    def get_geocode_from_address_v2(self, address: str,
+    def get_geocode_from_address_v2(self, address: str, language='en',
                                     query_info: list = ('formatted_address', 'name', 'rating',
                                                         'opening_hours', 'geometry')) -> tuple:
         """
@@ -67,6 +71,7 @@ class GoogleMapAPI(object):
         
         Args:
             address:
+            language:
             query_info:
 
         Returns:
@@ -77,10 +82,15 @@ class GoogleMapAPI(object):
             'fields': ','.join(query_info),
             'input': address,
             'inputtype': 'textquery',
+            'language': language,
             'key': self.key
         }
 
         response_json = requests.get(base_url, params=params).json()
+
+        if response_json['status'] != 'OK':
+            print(response_json)
+            raise ValueError(f'Cannot find geocode for {address}')
 
         try:
             latitude = response_json['candidates'][0]['geometry']['location']['lat']
@@ -199,7 +209,6 @@ class GoogleMapAPI(object):
 
         # if there is next page
         # https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=NEXT_PAGE_TOKEN&key=YOUR_API_KEY
-        # import ipdb; ipdb.set_trace(context=20)
         while response_json.get('next_page_token', None):
             next_page_token = response_json['next_page_token']
             next_url = f'{base_url}?pagetoken={next_page_token}&key={self.key}'
@@ -332,7 +341,7 @@ class GoogleMapAPI(object):
             'source': source,
             'key': self.key
         }
-
+        
         response_json = requests.get(base_url, params=params).json()
         if response_json['status'] == 'OK':
             new_geocode = (response_json['location']['lat'], response_json['location']['lng'])
@@ -389,7 +398,7 @@ class GoogleMapAPI(object):
         # set proper destination geocode
         geocode_list = result_dict['geocode_list']
         distance = geocode_utils.calculate_distance_from_geocode(geocode_list[-1], destination)
-        if modify_destination:
+        if modify_destination and not no_last_leg:
             if distance < 15:
                 geocode_list[-1] = destination
             else:
@@ -418,9 +427,9 @@ class GoogleMapAPI(object):
 
         for leg in legs:
             steps = leg['steps']
-            result_dict = self.get_route_single_step(steps)
-            geocode_list = result_dict['geocode_list']
-            polyline_list = result_dict['polyline']
+            cur_result_dict = self.get_route_single_step(steps)
+            geocode_list = cur_result_dict['geocode_list']
+            polyline_list = cur_result_dict['polyline']
             result_dict['geocode_list'].extend(geocode_list)
             result_dict['polyline'].extend(polyline_list)
             result_dict['distance'] += leg['distance']['value']

@@ -1,0 +1,31 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: UrbanPlanner
+SAVE_INTERVAL: 5
+
+PLATFORM:
+  STREET_VIEW:
+    SIZE: [ 640, 640 ]
+    HEADING: 0
+    PITCH: 0
+    FOV: 60
+    SOURCE: outdoor
+    HEADING_RANGE:  180
+
+
+AGENT:
+  NAME: Imani
+  CITY: New York
+  START_POSITION: [40.80065084621264, -73.95808021948251] # not used here
+  BACKGROUND: "A sustainable urban development graduate, Imani is passionate about maintaining a harmonious balance between nature and urban ecosystems."
+  INTENTION: "Use RX-399 to collect first-person data for her studies."
+
+MEMORY:
+  PATH: visual_memory
+  BUILD_FROM_EXIST: False
+
+PIPELINE:
+  RX399_CFG: cfgs/rx399/rx399_imani.yaml
+
+  OUTPUT:
+    HEATMAP_DATA: heatmap_data.txt

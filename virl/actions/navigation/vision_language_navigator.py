@@ -14,7 +14,7 @@ from virl.perception.recognizer.recognizer import Recognizer
 
 class VisionLanguageNavigator(NavigatorTemplate):
     def __init__(self, cfg, platform, messager, start_location, output_dir, **kwargs):
-        super().__init__(cfg, platform, messager, start_location, output_dir, no_init_mover=True, **kwargs)
+        super().__init__(cfg, platform, messager, start_location, output_dir, **kwargs)
 
         vision_model_cfg = kwargs['vision_model_cfg']
         self.instruction = kwargs['instruction']

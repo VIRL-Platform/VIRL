@@ -1,0 +1,69 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: EstateRecommender
+
+AGENT:
+  NAME: Vivek
+  CITY: New York
+  BACKGROUND: "A tech-savvy estate agent who combines his local knowledge with online
+               tools like Zillow to find the perfect homes for his clients in the bustling city."
+  INTENTION: "Help Peng find a place to live for the semester."
+  START_POSITION: New York University
+
+PIPELINE:
+  FIND_ESTATE_CANDIDATES:
+    QUERY_API: True
+    QUERY_MODE: rent # [sale, rent]
+    ESTATE_INFO: ../data/estate/ny_peng_rent.json
+#    ESTATE_INFO: None # to avoid send request each time, you can set this to an existing json file
+    PARAMS:
+      address: None
+      city: New York
+      state: NY
+      zipCode: 11101 # zipcode
+      latitude: None
+      longitude: None
+      propertyType: None
+      bedrooms: None  # number of bedrooms
+      bathrooms: None  # number of bathrooms
+      status: Active
+      limit: 500
+      offset: None
+    MIN_PRICE: 1000 # min price of the property
+    MAX_PRICE: 3000 # max price of the property
+
+  NEARBY_INFO:
+    PARSE_TYPES:
+      PROMPT: REAL_ESTATE_INTENTION_TO_PLACE_TEMPLATE
+      MODEL: gpt-4-1106-preview # gpt-4-0613
+    SEARCH:
+      RADIUS: 200
+      DEDUPLICATE: True
+      MIN_REVIEWS: 0
+    
+    INFO_PROMPT: ESTATE_INFO_TEMPLATE
+
+  RATING:
+    MAX_NUM: 15
+    PROMPT: RATE_ESTATE_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+  
+  FINAL_RECOMMEND:
+    PROMPT: ESTATE_FINAL_RECOMMEND_TEMPLATE
+    CANDIDATE_PROMPT: SINGLE_ESTATE_CANDIDATE_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+    
+TASK_INFO:
+  AGENT:
+      NAME: Peng
+      CITY: New York
+      BACKGROUND: "Peng, a 20-year-old visiting student at NYU. Originally from Sichuan, 
+                  he is pursuing a degree in Computer Science and is an active participant in outdoor 
+                  activities. He is a fitness enthusiast. Although his parents financially support him, 
+                  he hope to find cost-effective house."
+      INTENTION: "Peng hopes the house can located near supermarkets for easy access to fresh produce. 
+                  It's also important for him to have bus stations or subway stations nearby for his 
+                  daily commute. Additionally, he frequently visit the gym, so having one in the vicinity 
+                  would be a great advantage."
+      START_POSITION: New York University
+

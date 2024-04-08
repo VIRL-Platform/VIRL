@@ -1,0 +1,46 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: Local
+INIT_HEADING: 0
+
+AGENT:
+  NAME: Local1
+  CITY: New York
+  START_POSITION: [ 40.724136452011855, -73.99758925549331 ]
+  BACKGROUND: "I am a native guy. I am familiar with the city and can help others with their questions."
+  INTENTION: "I would like to help others to find their ways."
+
+
+PIPELINE:
+  QUESTION_TO_PLACE:
+    PROMPT: QUESTION_TO_PLACE_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+    RADIUS: 2000
+
+  ROUTE:
+    ROUTE_MODE: bicycling
+    STOPOVER: False
+
+  SELECT_LANDMARKS:
+    MANNER: reviews_select # [llm_select, reviews_select]
+    RADIUS: 18
+
+    # for llm_select manner
+    PROMPT: SELECT_LANDMARKS_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+    # for reviews_select manner
+    MIN_REVIEWS: 10
+
+  MILESTONE_INFO:
+    SINGLE_PROMPT: SINGLE_INTERSECTION_GIVEN_DIRECTION_TEMPLATE
+    ALL_INFO_PROMPT: LANGUAGE_INSTRUCTION_NAVIGATION_GIVEN_DIRECTION_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+  OUTPUT:
+    ROUTE_PATH: plan_trajectory.html
+    TRAJ_PATH: trajectory.html
+    FILE_TEMPLATE: polyline_template
+
+TASK_INFO:
+  QUESTION: "Where’s a good place to buy some gifts for my friends?"

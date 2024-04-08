@@ -483,8 +483,11 @@ def cal_min_heading_diff_between_headings(heading1, heading2):
     return heading_diff
 
 
-def is_heading_in_range(heading_range, heading):
+def is_heading_in_range(heading_range, heading, heading_epsilon=0.0):
     heading_left, heading_right = heading_range
+    heading_left = (heading_left - heading_epsilon) % 360
+    heading_right = (heading_right + heading_epsilon) % 360
+    
     if heading_left < heading_right:
         return heading_left <= heading <= heading_right
     else: # wraps around 0/360

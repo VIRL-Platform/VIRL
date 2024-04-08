@@ -19,7 +19,12 @@ def init_world_and_agent(cfg, output_dir):
 
     messager = Messager(cfg.UI)
 
-    return platform, agent, chatbot, messager
+    if cfg.get('TASK_INFO', None) and cfg.TASK_INFO.get('AGENT', None):
+        custom_agent = build_agent(cfg.TASK_INFO.AGENT)
+    else:
+        custom_agent = None
+
+    return platform, agent, chatbot, messager, custom_agent
 
 
 def location_to_geocode(platform, address, version='v2', relocate=False):
@@ -88,7 +93,7 @@ def search_intro(pipeline_cfg, agent, chatbot, candidates):
 
 def query_place_in_the_google_map_single(pipeline_cfg, platform, box, street_image, place):
     radius = pipeline_cfg.RADIUS
-    heading_range = pipeline_cfg.HEADING_RANGE
+    heading_epsilon = pipeline_cfg.get('HEADING_EPS', 0.0)
 
     heading_left, heading_right = geocode_utils.get_heading_range_to_box(
         box, street_image.shape, street_image.heading, street_image.fov
@@ -106,7 +111,7 @@ def query_place_in_the_google_map_single(pipeline_cfg, platform, box, street_ima
     # filter place list
     final_result = None
     for place in place_list:
-        if place['distance'] < radius and geocode_utils.is_heading_in_range((heading_left, heading_right), place['heading']):
+        if place['distance'] < radius and geocode_utils.is_heading_in_range((heading_left, heading_right), place['heading'], heading_epsilon):
             final_result = place
             break
     

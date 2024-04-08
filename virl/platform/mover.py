@@ -169,12 +169,10 @@ class StreetViewMover(object):
         Returns:
             heading: the heading that is suitable to the specific path
         """
+        self._get_all_possible_paths()
         path_element = self.current_path_elements[idx]
         transform = path_element.get_attribute('transform')
-        if 'rotate' in transform:
-            rotate = float(transform.split('rotate(')[1].split(')')[0])
-        else:
-            rotate = 0.0
+        rotate = float(transform.split('rotate(')[1].split(')')[0]) if 'rotate' in transform else 0.0
         current_heading = self.get_current_heading_and_pitch()[0]
         heading = (rotate + current_heading) % 360
         return heading

@@ -108,7 +108,6 @@ def extract_numbers(s):
         return float(number_str) if '.' in number_str else int(number_str)
     else:
         # If no number is found, return None or raise an error
-        import ipdb; ipdb.set_trace(context=20)
         return None
 
 

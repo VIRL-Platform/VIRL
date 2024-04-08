@@ -1,0 +1,6 @@
+_BASE_CONFIG_: cfgs/aria/aria.yaml
+
+PIPELINE:
+  PLACE_INTRO:
+    MANNER: websearch
+    PROMPT: PLACE_INTRO_TEMPLATE_SIMPLE

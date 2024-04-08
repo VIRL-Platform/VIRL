@@ -1,0 +1,38 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: RouteOptimizer
+SAVE_INTERVAL: 1
+
+AGENT:
+  NAME: peng
+  CITY: New York
+  START_POSITION: New York University
+  BACKGROUND: "Originally from Chengdu, Sichuan, Peng is a student at PKU. 
+    He just arrived for a semester abroad at NYC, and is couch surfing until he gets 
+    settled."
+  INTENTION: "Peng needs to visit five locations around the city: his University 
+    Card Center, Residence Hall, Research Center, Library, and Student Center"
+
+PIPELINE:
+  NAVIGATION:
+    NAME: PointNavigator
+    ROUTE_MODE: bicycling 
+    POLYLINE: False
+
+    # the radius to stop for destination
+    STOP_RADIUS: 5
+
+    WAY_POINTS: None
+    WAY_POINTS_LANGUAGE: "I need to go to five places to submit my documents: NYU Card Center, NYU 
+      Lipton Hall, NYU Center for Data Science, Elmer Holmes Bobst Library and John A. Paulson Center."
+    WAY_POINT_PARSE_TEMPLATE: NAVIGATION_LANGUAGE_TO_WAYPOINT_LIST
+
+    MAX_GO_BACK: 3
+    MODEL: gpt-4-1106-preview
+    OPTIMIZED: True # optimized to the shortest path or not
+    STOPOVER: True
+
+    OUTPUT:
+      ROUTE_PATH: plan_trajectory.html
+      TRAJ_PATH: trajectory.html
+      FILE_TEMPLATE: polyline_template

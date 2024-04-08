@@ -14,20 +14,20 @@ class Recognizer(object):
 
     def build_model(self, vision_model_cfg):
         model_cfg = getattr(vision_model_cfg, self.recognize_cfg.NAME)
-        if self.recognize_cfg.NAME == 'CLIP':
-            from virl.perception.recognizer.clip_client import CLIPClient
-            model = CLIPClient(model_cfg)
-        elif self.recognize_cfg.NAME == 'EvaCLIP':
-            from virl.perception.recognizer.eva_clip_client import EvaCLIPClient
-            model = EvaCLIPClient(model_cfg)
-        elif self.recognize_cfg.NAME == 'LLaVA':
-            from virl.perception.recognizer.llava_client import LLaVAClient
-            model = LLaVAClient(model_cfg)
-        elif self.recognize_cfg.NAME == 'PaddleOCR':
-            from virl.perception.recognizer.paddle_ocr import PaddleOCR
-            model = PaddleOCR(model_cfg)
+        recognizer_mapping = {
+            'CLIP': ('virl.perception.recognizer.clip_client', 'CLIPClient'),
+            'EvaCLIP': ('virl.perception.recognizer.eva_clip_client', 'EvaCLIPClient'),
+            'LLaVA': ('virl.perception.recognizer.llava_client', 'LLaVAClient'),
+            'PaddleOCR': ('virl.perception.recognizer.paddle_ocr', 'PaddleOCR')
+        }
+
+        if self.recognize_cfg.NAME in recognizer_mapping:
+            module_name, class_name = recognizer_mapping[self.recognize_cfg.NAME]
+            module = __import__(module_name, fromlist=[class_name])
+            recognizer_class = getattr(module, class_name)
+            model = recognizer_class(model_cfg)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"Recognizer {self.recognize_cfg.NAME} is not implemented.")
 
         return model
 
