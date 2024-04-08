@@ -1,6 +1,6 @@
 _BASE_CONFIG_: cfgs/base_configs/default.yaml
 
-TASK: VLNMultiround
+TASK: Tourist
 SAVE_INTERVAL: 1
 INIT_HEADING: 0
 
@@ -35,7 +35,7 @@ AGENT:
 
 PIPELINE:
   DATA:
-    ROUTE_PATH: ../data./tourist/route_infos_ny_moma.json
+    ROUTE_PATH: ../data/tourist/route_infos_ny_moma.json
 
   NAVIGATION:
     NAME: VisionLanguageNavigator

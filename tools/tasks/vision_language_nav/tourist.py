@@ -5,7 +5,7 @@ import numpy as np
 from easydict import EasyDict
 
 from tools.tasks.task_template import TaskTemplate
-from .vln import VisionLanguageNavigation
+from .vln_template import VLNTemplate
 from .local import Local
 
 from virl.agents.agent_template import AgentTemplate
@@ -14,7 +14,7 @@ from virl.utils import common_utils, pipeline, geocode_utils
 from virl.actions.navigation import build_navigator
 
 
-class Tourist(TaskTemplate):
+class Tourist(VLNTemplate):
     def __init__(self, output_dir, logger):
         super().__init__(output_dir, logger)
         self.result_path = self.output_dir / 'results.json'
@@ -25,7 +25,7 @@ class Tourist(TaskTemplate):
         if os.path.exists(self.result_path):
             self.resume_results()
 
-    def run(self, platform, agent, chatbot, messager, args):
+    def run(self, platform, agent, chatbot, messager, args, **kwargs):
         pipeline_cfg = cfg.PIPELINE
         
         # step 1: obtain the initial route
@@ -36,7 +36,8 @@ class Tourist(TaskTemplate):
         elif self.current_route is None:
             self.current_route = self.ask_new_route_single(
                 pipeline_cfg, platform, agent, chatbot, messager, args,
-                agent.start_position, cfg.INIT_HEADING, None, question_to_place=True, cfg_file_path=None
+                agent.start_position, cfg.INIT_HEADING, None, question_to_place=True,
+                cfg_file_path=cfg.TASK_INFO.LOCAL_AGENT_CFG
             )
 
         # step 2: visual language navigation
