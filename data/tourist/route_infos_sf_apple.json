@@ -1,0 +1,124 @@
+{
+    "dest_place": {
+        "name": "Apple Union Square",
+        "geocode": [
+            37.7886188,
+            -122.4069797
+        ],
+        "rating": 4.2,
+        "place_id": "ChIJZZ3SqIiAhYARdxDXMalu6mY",
+        "distance": 137.2094234640037,
+        "n_reviews": 4132,
+        "heading": 352.4288434709934,
+        "photo_reference": "ATJ83zjgTD30PfJxFwQoa9uFFLQcfZIVo9ML1XrQhxYZ3FHJJj29ANV4KxsCpbyKeMQLjjL2IKI-2EpNNz92zIYQtJffitEHIYkf5fYf_PHo7nU56lC9aJ7xduPEAGud5dTTzEPIlojY_iTPAxjPEZWnCdzQU1CN88uGgd8FyT2GHBCxaVk_",
+        "place_types": [
+            "electronics_store",
+            "store",
+            "point_of_interest",
+            "establishment"
+        ],
+        "plus_code": {
+            "compound_code": "QHQV+C6 Union Square, San Francisco, CA, USA",
+            "global_code": "849VQHQV+C6"
+        },
+        "vicinity": "300 Post Street, San Francisco",
+        "region": "Union_Square_SF_North_America",
+        "relocated_geocode": [
+            37.78860424338562,
+            -122.4068227833895
+        ]
+    },
+    "start_place": {
+        "name": "The Whisky Shop of San Francisco",
+        "geocode": [
+            37.7896694,
+            -122.4065056
+        ],
+        "rating": 4.7,
+        "place_id": "ChIJJ1tpT4mAhYAREcKW8GbIoho",
+        "distance": 136.12732709712475,
+        "n_reviews": 152,
+        "heading": 332.55234647308566,
+        "photo_reference": "ATJ83zg06OLAtTWosl80HuabnfBKEFJyl8IIFIw4rPVDHh68HhRcY3a5-RDRaN20eVmtHJWCMRzY1nmk5brVjRqSFzFAni3CqLnpOB2Q_RB2DqChU5JPOgoM-OOsnozmiUqJjZdqIX4n-9dW1nH3qIVcCWzxdW8zrgTT7wq5rmzC4gqjG7-1",
+        "place_types": [
+            "liquor_store",
+            "store",
+            "point_of_interest",
+            "establishment"
+        ],
+        "plus_code": {
+            "compound_code": "QHQV+V9 Union Square, San Francisco, CA, USA",
+            "global_code": "849VQHQV+V9"
+        },
+        "vicinity": "360 Sutter Street #4302, San Francisco",
+        "region": "Union_Square_SF_North_America",
+        "relocated_geocode": [
+            37.78950378406966,
+            -122.4064316195797
+        ]
+    },
+    "route_results": {
+        "geocode_list": [
+            [
+                37.78942451809297,
+                -122.4069914863775
+            ],
+            [
+                37.78860424338562,
+                -122.4068227833895
+            ]
+        ],
+        "polyline": [
+            "kwseFdobjVFbADj@",
+            "}vseFtrbjV@?b@G\\ETCf@G^EBA"
+        ],
+        "instructions": [
+            "Head <b>west</b> on <b>Sutter St</b> toward <b>Stockton St</b>",
+            "Turn <b>left</b> after Starbucks (on the left)"
+        ],
+        "distance_list": [
+            50,
+            93
+        ],
+        "time_list": [
+            15,
+            52
+        ],
+        "time": 67,
+        "distance": 143,
+        "n_landmarks": 1,
+        "landmark_list": [
+            {
+                "name": "Starbucks",
+                "geocode": [
+                    37.789348,
+                    -122.406831
+                ],
+                "rating": 3.9,
+                "place_id": "ChIJuUGLS4mAhYAR1g0mGcIy8fk",
+                "distance": 16.491214204208337,
+                "n_reviews": 521,
+                "heading": 121.10357876421074,
+                "photo_reference": "AcJnMuEJfwyAyd2xCrgtuwPXtQRaAqvuF4v1nf9J22jbvDGMdbosUgQmLLevLaIEPYytO00Z1Vd5Zt_TWEjX5WnzJ5XCrQziqch2DFd29D4SOy7ptuulpMDSochdOx9c5iZm9Th2AX2RChnU7MjlYn5FCWJY_E4xRNBxuhwu4oLuGR6IZadB",
+                "place_types": [
+                    "cafe",
+                    "restaurant",
+                    "point_of_interest",
+                    "food",
+                    "store",
+                    "establishment"
+                ],
+                "plus_code": {
+                    "compound_code": "QHQV+P7 Union Square, San Francisco, CA, USA",
+                    "global_code": "849VQHQV+P7"
+                },
+                "vicinity": "390 Stockton Street, San Francisco",
+                "spatial_relation": "left behind",
+                "expression": "Starbucks is on your left behind"
+            }
+        ]
+    },
+    "init_heading": 0,
+    "instruction": "First, turn around and head west, passing the Starbucks on your left. Continue straight until you reach the next intersection.\nFinally, make a right turn to head south. Walk a bit further and you will find your destination, Apple Union Square, on your right.",
+    "milestone_info": "\n{\n\"intersection_idx\": \"1\",\n\"landmarks\": \"Starbucks is on your left behind\",\n\"distance\": \"50 meters\",\n\"human_heading\": \"0\",\n\"to_next_intersection_heading\": \"259 (west)\",\n}\n\n{\n\"intersection_idx\": \"2\",\n\"landmarks\": \"The destination Apple Union Square is on your right\",\n\"distance\": \"93 meters\",\n\"human_heading\": \"259\",\n\"to_next_intersection_heading\": \"170 (south)\",\n}\n"
+}

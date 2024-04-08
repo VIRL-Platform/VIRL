@@ -1,0 +1,158 @@
+{
+    "dest_place": {
+        "name": "MoMA Design Store",
+        "geocode": [
+            40.7228345,
+            -73.9980444
+        ],
+        "rating": 4.5,
+        "place_id": "ChIJa7WF1I5ZwokRqt0Ia4lP2_4",
+        "distance": 137.0764038578363,
+        "n_reviews": 1904,
+        "heading": 38.92632098665098,
+        "photo_reference": "ATJ83zgMB8ewpstITKe7DEECOI9MHlMlf6kzSNfsZb37XZmqqc0zlKp1HGMOMKbWMA99S8nmMKgu0BA1brymmVBXYTRxh-yYZSsacxaPJFTfREX-kBmAXc4QcZSvDhHnFvaKFZ0_NyHBiDEvxFjXWDHcKPwY_maTgyoEh7ZnL0i5IEqAvI7p",
+        "place_types": [
+            "book_store",
+            "home_goods_store",
+            "point_of_interest",
+            "store",
+            "establishment"
+        ],
+        "plus_code": {
+            "compound_code": "P2F2+4Q New York, NY, USA",
+            "global_code": "87G8P2F2+4Q"
+        },
+        "vicinity": "81 Spring Street A, New York",
+        "region": "SoHo_NY_North_America",
+        "relocated_geocode": [
+            40.72271488946794,
+            -73.99809813308585
+        ]
+    },
+    "start_place": {
+        "name": "Converse Flagship Store",
+        "geocode": [
+            40.7240136,
+            -73.9976748
+        ],
+        "rating": 4.2,
+        "place_id": "ChIJaYbgEY5ZwokRI6erEq6_FSk",
+        "distance": 157.97077402165624,
+        "n_reviews": 1578,
+        "heading": 59.80397426612956,
+        "photo_reference": "ATJ83zgxhqV7RR2TxMBEXaST6hzZ-_dOhLH34kdrCfcw1Q38iIUogR8ZW-Ojk21YLovJkR5XwezT-nOUhPuZGnw15peIBcpVjYnsEQD_x8dAnjo1nwxa-K4AEK-NzAyIhB0w_tDUYwfVdoJs1I3jJsKbzdBSOk8Xyia7BKYq4sQ9wpX8eDfy",
+        "place_types": [
+            "shoe_store",
+            "clothing_store",
+            "store",
+            "point_of_interest",
+            "establishment"
+        ],
+        "plus_code": {
+            "compound_code": "P2F2+JW New York, NY, USA",
+            "global_code": "87G8P2F2+JW"
+        },
+        "vicinity": "560 Broadway, New York",
+        "region": "SoHo_NY_North_America",
+        "relocated_geocode": [
+            40.72416229223982,
+            -73.99762612488824
+        ]
+    },
+    "route_results": {
+        "geocode_list": [
+            [
+                40.72422891501083,
+                -73.99779012634859
+            ],
+            [
+                40.72302278542454,
+                -73.9988004045286
+            ],
+            [
+                40.72271488946794,
+                -73.99809813308585
+            ]
+        ],
+        "polyline": [
+            "_}pwFdtsbMM^",
+            "m}pwFdusbMxC`CtAjA",
+            "}upwFr{sbMd@wAXw@"
+        ],
+        "instructions": [
+            "Head <b>northwest</b> on <b>Prince St</b> toward <b>Broadway</b>",
+            "Turn <b>left</b> onto <b>Broadway</b>",
+            "Turn <b>left</b> at the 1st cross street onto <b>Spring St</b>"
+        ],
+        "distance_list": [
+            16,
+            159,
+            70
+        ],
+        "time_list": [
+            6,
+            48,
+            35
+        ],
+        "time": 89,
+        "distance": 245,
+        "n_landmarks": 2,
+        "landmark_list": [
+            {
+                "name": "Prince St",
+                "geocode": [
+                    40.7242323,
+                    -73.997806
+                ],
+                "rating": 4,
+                "place_id": "ChIJdS2R445ZwokRH4dsykZ73T4",
+                "distance": 1.3927685938264136,
+                "n_reviews": 85,
+                "heading": 285.71551411805376,
+                "photo_reference": "AcJnMuFIgpJJoaqjohEhOuUWaxceWZYTMLfivF4f_zXnMMkO_Tu-iBFoFUxH7Tg1JQGeqMecsfBFF46_31D_iFWzOXMS3sGk52ab_AQyXdq6yhwFsVkgXQ2jvRQUpqNulY_6sIYecZEmPE0lTrT1AaqipcMyICRxXeeGDz7vq2MqMH7iT5nm",
+                "place_types": [
+                    "subway_station",
+                    "transit_station",
+                    "point_of_interest",
+                    "establishment"
+                ],
+                "plus_code": {
+                    "compound_code": "P2F2+MV New York, NY, USA",
+                    "global_code": "87G8P2F2+MV"
+                },
+                "vicinity": "New York",
+                "spatial_relation": "front",
+                "expression": "Prince St is on your front"
+            },
+            {
+                "name": "Aritzia",
+                "geocode": [
+                    40.7228872,
+                    -73.99874969999999
+                ],
+                "rating": 3.8,
+                "place_id": "ChIJqyeQy45ZwokRzfClYgoBF2E",
+                "distance": 15.654121532722852,
+                "n_reviews": 388,
+                "heading": 164.1762035021701,
+                "photo_reference": "AcJnMuH17J33mPO4s4QhIf2b5O4j02AXlsZ8ztawvw8_n0Qu977Bvb4mje_V6i4cH-qitt--LSuZIB0hfGFY5JkG-8ZmCnCuk_zmXuUVVwAkvkvP8AVHGYqOXd3IDTqV5TEO99-wrnaavLMPsbFRvRiWrG2pJ6hXMPj1PZJn70eJf7w0QaO3",
+                "place_types": [
+                    "clothing_store",
+                    "store",
+                    "point_of_interest",
+                    "establishment"
+                ],
+                "plus_code": {
+                    "compound_code": "P2F2+5G New York, NY, USA",
+                    "global_code": "87G8P2F2+5G"
+                },
+                "vicinity": "524 Broadway, New York",
+                "spatial_relation": "left front",
+                "expression": "Aritzia is on your left front"
+            }
+        ]
+    },
+    "init_heading": 0,
+    "instruction": "First, turn left to face northwest and walk a short distance until you reach the next intersection, with Prince St in front of you.\nNext, make a sharp right turn to head southwest. Continue straight for a while until you reach the next intersection, where you'll see Aritzia on your left front.\nFinally, make a sharp left turn to head southeast and walk a bit further. You will find your destination, the MoMA Design Store, on your left.",
+    "milestone_info": "\n{\n\"intersection_idx\": \"1\",\n\"landmarks\": \"Prince St is on your front\",\n\"distance\": \"16 meters\",\n\"human_heading\": \"0\",\n\"to_next_intersection_heading\": \"298 (northwest)\",\n}\n\n{\n\"intersection_idx\": \"2\",\n\"landmarks\": \"Aritzia is on your left front\",\n\"distance\": \"159 meters\",\n\"human_heading\": \"298\",\n\"to_next_intersection_heading\": \"212 (southwest)\",\n}\n\n{\n\"intersection_idx\": \"3\",\n\"landmarks\": \"The destination MoMA Design Store is on your left\",\n\"distance\": \"70 meters\",\n\"human_heading\": \"212\",\n\"to_next_intersection_heading\": \"120 (southeast)\",\n}\n"
+}
