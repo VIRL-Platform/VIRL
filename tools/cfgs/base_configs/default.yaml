@@ -38,10 +38,10 @@ VISION_MODELS:
     ROOT_PATH: ../../GLIP
     MODEL_SIZE: large  # [tiny, large]
     # for GLIP CLIENT ONLY
-    SERVER: http://147.8.181.77:22410
+    SERVER: http://xxx.xxx.xxx.xxx:xxxx
   
   LIGHTGLUE:
-    SERVER: http://147.8.181.77:22411
+    SERVER: http://xxx.xxx.xxx.xxx:xxxx
 
   GPT4V:
     PLACEHOLDER: True 
@@ -49,7 +49,7 @@ VISION_MODELS:
   NAME_LIST: ["CLIP", "EvaCLIP", "LLaVA"]
 
   CLIP:
-    SERVER: http://147.8.181.77:22380
+    SERVER: http://xxx.xxx.xxx.xxx:xxxx
   
   EvaCLIP:
     MODEL_NAME: EVA02-CLIP-bigE-14-plus
