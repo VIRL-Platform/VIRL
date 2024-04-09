@@ -53,10 +53,10 @@ VISION_MODELS:
   
   EvaCLIP:
     MODEL_NAME: EVA02-CLIP-bigE-14-plus
-    MODEL_PATH: /home/dwp/weipeng/Code/EVA/EVA-CLIP/rei
+    MODEL_PATH: /xxx/EVA/EVA-CLIP/rei
 
   LLaVA:
-    MODEL_PATH: /home/deng/jihan/LLaVA/llava-v1.5-7b
+    MODEL_PATH: /xxx/LLaVA/llava-v1.5-7b
     MODEL_BASE: 
     LOAD_8BIT: False
     LOAD_4BIT: False
