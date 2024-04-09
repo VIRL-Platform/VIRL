@@ -25,7 +25,7 @@
 ****
 
 ### Changelog
-[2024-03-xx] **NEW!!** Release code for agents and install & Deployment guideline.
+[2024-04-09] **NEW!!** Release code for agents and installation & deployment & running guideline.
 [2024-02-06] Release basic platform code.
 
 ### Release Checklist
