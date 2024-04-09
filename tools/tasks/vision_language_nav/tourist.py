@@ -4,14 +4,12 @@ import numpy as np
 
 from easydict import EasyDict
 
-from tools.tasks.task_template import TaskTemplate
 from .vln_template import VLNTemplate
 from .local import Local
 
 from virl.agents.agent_template import AgentTemplate
 from virl.config import cfg_from_list, cfg_from_yaml_file, cfg
 from virl.utils import common_utils, pipeline, geocode_utils
-from virl.actions.navigation import build_navigator
 
 
 class Tourist(VLNTemplate):

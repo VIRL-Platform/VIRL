@@ -58,6 +58,7 @@ python launch.py --cfg_file cfgs/rx399/rx399_hk.yaml
 #### Imani
 - Follow the commands below to run Imani `trash bin` & `hydrant` & `bench` distribution statistic on Central Park, New York City.
 ```shell
+cd tools
 python launch.py --cfg_file cfgs/imani/imani.yaml
 ```
 
@@ -66,6 +67,7 @@ python launch.py --cfg_file cfgs/imani/imani.yaml
 #### Hiro
 - Follow the commands below to attempt Hiro intentional exploring in Hong Kong street.
 ```shell
+cd tools
 python launch.py --cfg_file cfgs/hiro/hiro.yaml
 ```
 
@@ -73,6 +75,7 @@ python launch.py --cfg_file cfgs/hiro/hiro.yaml
 - In our paper, Ling and Local are collaborative agents, but they can also run individually.
 - Follow the commands below to let Local generate navigation instructions according to a question.
 ```shell
+cd tools
 # Example of MoMA design store in NYC
 python launch.py --cfg_file cfgs/local/local_nyc_case1.yaml
 # Example of Apple store in San Francisco
@@ -82,6 +85,7 @@ python launch.py --cfg_file cfgs/local/local_sf_iphone.yaml
 #### Ling
 - Follow the commands below to run Ling navigation according to instruction in the city street.
 ```shell
+cd tools
 # Example of MoMA design store in NYC
 python launch.py --cfg_file cfgs/ling/ling_nyc_moma.yaml
 # Example of Apple store in San Francisco
@@ -93,9 +97,10 @@ python launch.py --cfg_file cfgs/ling/ling_sf_applestore.yaml
 #### Diego
 - Follow the commands below to get Diego's Itinerary for you.
 ```shell
+cd tools
 python launch.py --cfg_file cfgs/diego/diego.yaml
 ```
-- By default, we disable taking user language & status adjustment. To open, please modify the following keys in the [config](../tools/cfgs/diego/diego.yaml):
+- By default, we disable taking user language & status adjustment. To open, please modify the following keys in the [config](../tools/cfgs/diego/diego.yaml) to `True`:
 ```yaml
 USER_INPUT: False # take user input for revise plan or not
 USER_STATUS: False # take user status for revise plan or not
