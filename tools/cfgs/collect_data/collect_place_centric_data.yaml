@@ -1,0 +1,42 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: CollectPlaceCentricData
+SAVE_INTERVAL: 10
+
+AGENT:
+  NAME: DataGenRobot
+  CITY: "New York"
+  START_POSITION: [40.733359, -74.002587]
+  BACKGROUND: "DataGenRobot is a data collection robot."
+  INTENTION: "I am collecting place-centric images."
+
+PIPELINE:
+  SAMPLE_PLACES_IN_REGION:
+    ENABLED: True # DISABLE
+
+    GRID_SAMPLE:
+      # modify the following parameters to specify the region
+      POLYGON_PATH: ../data/benchmark/benchmark_polygon_area/North_America/polygon_area_SoHo_NY.txt 
+      SPACING: 20
+    
+    RELOCATE: True
+    RELOCATED_POINTS: None
+
+    NEARBY_SEARCH:
+      RADIUS: 120
+      TYPE: ['establishment', 'point_of_interest']
+      PLACE_TYPES: ../data/benchmark/place_types.txt
+      NO_NEXT_PAGE: True
+
+  GET_PHOTO:
+    MAX_WIDTH: 400
+    MAX_HEIGHT: 400
+    SAVE_IMAGE: True
+
+    PHOTO_FILTER:
+      NAME: CLIP
+      THRESH: 0.92
+      MAX_COUNT: 3
+
+      CARED_LABELS: ['storefront']
+      CANDIDATES: 'indoor,others'

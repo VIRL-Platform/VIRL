@@ -64,6 +64,8 @@ python launch.py --cfg_file cfgs/imani/imani.yaml
 
 - Note: Imani will takes a huge amount of Google Map Platform credits, around `$300-$400`.
 
+- We provide our collected heatmap data [here](https://drive.google.com/drive/folders/17YTC0fCrxbdA--2DPE417uSD1wTlw2bJ?usp=sharing).
+
 #### Hiro
 - Follow the commands below to attempt Hiro intentional exploring in Hong Kong street.
 ```shell

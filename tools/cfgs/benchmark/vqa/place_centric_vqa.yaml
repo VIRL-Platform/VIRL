@@ -1,0 +1,81 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: BMPlaceCentricVQA
+
+VISION_MODELS:
+  NAME_LIST: ["MiniGPT4", "MiniGPT4Local","InstructBLIPLocal", "BLIP2", "InstructBLIP", \
+              "LLaVA", "mPLUG_Owl", "Shikra"]
+
+  MiniGPT4:
+    SERVER: http://127.0.0.1:xxxx
+    BEAM_SEARCH: 1
+    TEMPERATURE: 1.0
+
+  MiniGPT4Local:
+    PATH: /xxx/MiniGPT-4
+    GPU_ID: 0
+    CFG_PATH: /xxx/MiniGPT-4/eval_configs/minigpt4_eval.yaml
+
+  InstructBLIPLocal:
+    MODEL_NAME: blip2_t5_instruct
+    MODEL_TYPE: flant5xxl
+
+    MIN_LENGTH: 1
+    MAX_LENGTH: 250
+    BEAM_SIZE: 5
+    LENGTH_PENALTY: 1.0
+    REPETITION_PENALTY: 1.0
+    TOP_P: 0.9
+    SAMPLING: "Beam search"
+
+  BLIP2:
+    MODEL_NAME: blip2_t5
+    MODEL_TYPE: pretrain_flant5xxl
+
+  InstructBLIP:
+    ENABLED: True
+    SERVER: http://xxx.xxx.xxx.xxx:xxx
+    MIN_LENGTH: 1
+    MAX_LENGTH: 250
+    BEAM_SIZE: 5
+    LENGTH_PENALTY: 1.0
+    REPETITION_PENALTY: 1.0
+    TOP_P: 0.9
+  
+  LLaVA:
+    MODEL_PATH: /xxx/LLaVA/llava-v1.5-7b
+    LOAD_8BIT: False
+    LOAD_4BIT: False
+    TEMPERATURE: 0.2
+    MAX_NEW_TOKENS: 512
+  
+  mPLUG_Owl:
+    MODEL_NAME: MAGAer13/mplug-owl-llama-7b
+    MODEL_PATH: /xxx/mPLUG-Owl
+
+  Shikra:
+    SERVER: http://127.0.0.1:xxx/shikra
+
+AGENT:
+  NAME: PlaceVQARobot
+  CITY: New York
+  START_POSITION: [40.72722308221251, -74.00072418643838]
+  Background: "I am a place-centric VQA robot."
+  INTENTION: "Select most suitable human intention about places in the images"
+
+PIPELINE:
+  PREPARE_DATA:
+    IMAGE_DIR: ../data/benchmark/place_centric_data/place_centric_images
+    QA_PAIRS: ../data/benchmark/place_centric_data/qa_pairs.json
+
+  VQA:
+    MM_LLM: BLIP2 # modify to the model name
+    FULL_QUESTION_TEMPLATE: intention_driven_qa_template
+
+    GPT_MATCH_PROMPT: match_mm_llm_answer_template
+    MODEL: gpt-3.5-turbo-0613
+
+EVALUATION:
+  EVAL_ONLY: False
+  REGION_FILE: ../data/place_centric_data/place_infos.pickle
+  EVAL_CONTENT: [city, continent, place_type]

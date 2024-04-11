@@ -1,0 +1,12 @@
+_BASE_CONFIG_: cfgs/benchmark/benchmark_vln/benchmark_vln_l1.yaml
+
+PIPELINE:
+  NAVIGATION:
+    LANDMARK_DETECT:
+      MANNER: visual # [visual, oracle]
+      NAME: PaddleOCR
+      THRESH: 0.75
+      CANDIDATES: ""
+      
+    ACTION_PRED:
+      AUTO_REGRESSIVE: True

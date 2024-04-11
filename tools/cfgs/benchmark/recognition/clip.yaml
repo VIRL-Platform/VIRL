@@ -1,0 +1,32 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: BMPlaceCentricRecognition
+
+VISION_MODELS:
+  NAME_LIST: ["CLIPLocal"]
+
+  CLIPLocal:
+    # NAME: "ViT-B/32"
+    NAME: "ViT-L/14"
+    # NAME: "ViT-L/14@336px"
+    TEMPERATURE: 100.0
+
+AGENT:
+  NAME: RecognitionRobot
+  CITY: New York
+  START_POSITION: [40.72722308221251, -74.00072418643838]
+  BACKGROUND: "RecognitionRobot is a place recognition robot for the place centric image."
+  INTENTION: "Recognize the place type of the given image."
+
+PIPELINE:
+  PREPARE_DATA:
+    IMAGE_DIR: ../data/benchmark/place_centric_data/place_centric_images
+    PLACE_INFO: ../data/benchmark/place_centric_data/place_infos_valid.pickle
+
+  RECOGNITION:
+    # model name
+    NAME: CLIPLocal
+    CANDIDATES_PATH: ../data/benchmark/place_types.txt
+
+  EVALUATION:
+    MODE: any_one

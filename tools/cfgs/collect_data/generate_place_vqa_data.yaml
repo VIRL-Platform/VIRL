@@ -1,0 +1,25 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: GeneratePlaceVQAData
+SAVE_INTERVAL: 1
+
+AGENT:
+  NAME: DataGenRobot
+  CITY: "New York"
+  
+  START_POSITION: [40.733359, -74.002587]
+
+  BACKGROUND: "DataGenRobot is a data collection robot."
+  INTENTION: "I am collecting data for the benchmarking of the place-centric VQA task."
+
+PIPELINE:
+  PLACE_INFO: ../data/benchmark/place_centric_data/place_infos_valid.pickle
+  PLACE_TYPES: ../data/benchmark/place_types.txt
+  QA_PAIR_PATH: None
+  ANSWER_PROMPT: intention_driven_choice_answer_template
+  MODEL: gpt-4-1106-preview # gpt-4-0613
+
+  QUESTION: "Which human intentions can be accomplished here?"
+
+GPT:
+  TEMPERATURE: 1.0

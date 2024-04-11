@@ -1,0 +1,96 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: BMStreetLoc
+SAVE_INTERVAL: 1
+
+PLATFORM:
+  MOVER:
+    # moving query mode
+    STREET_VIEW_QUERY: False
+    RADIUS_QUERY:
+      ENABLED: False
+      CONDITION_HEADING_RANGE: 30
+      MAX_RADIUS: 10
+      DELTA_RADIUS: 3
+      DELTA_HEADING: 45
+      HEADING_RANGE: 20
+
+  STREET_VIEW:
+    SIZE: [ 640, 640 ]
+    HEADING: 0
+    PITCH: 10
+    FOV: 60
+    SOURCE: outdoor
+    HEADING_RANGE:  360
+
+VISION_MODELS:
+  NAME_LIST: ["GLIP", "GLIP_CLIP", "GroundingDINO", "OWL_VIT"]
+
+  OWL_VIT:
+    MODEL_NAME: google/owlvit-large-patch14
+
+  GLIP_CLIP:
+    GLIP:
+      SERVER: http://xxx.xxx.xxx.xxx:xxxx
+      THRESH: 0.4
+    CLIP:
+      SERVER: http://xxx.xxx.xxx.xxx:xxxx
+      THRESH: 0.8
+      TEMPERATURE: 100.
+  
+  GroundingDINO:
+    CFG_FILE: /xxx/GroundingDINO/groundingdino/config/GroundingDINO_SwinB_cfg.py
+    CKPT_FILE: /xxx/GroundingDINO/weights/groundingdino_swinb_cogcoor.pth
+    BOX_THRESHOLD: 0.35
+    TEXT_THRESHOLD: 0.25
+
+
+AGENT:
+  NAME: PlaceDetRobot
+  CITY: New York
+  START_POSITION: [40.72722308221251, -74.00072418643838]
+  BACKGROUND: "PlaceDetRobot is a place detection robot on the street view."
+  INTENTION: "Localize cared places in the street view."
+
+
+PIPELINE:
+  NAVIGATION:
+    NAME: RouteNavigator
+
+    POLYGON_PATH: None
+    ROUTE_PATH: None
+    POINT_PATH: None
+
+    # GRID SAMPLE
+    SPACING: 20
+    TSP_ALGO: 2opt
+
+    OUTPUT:
+      ROUTE_PATH: plan_trajectory.html
+      TRAJ_PATH: trajectory.html
+      FILE_TEMPLATE: polyline_template
+
+  PREPARE_DATA:
+    PLACE_INFO: None
+    PLACE_TYPE: ['establishment', 'point_of_interest']
+    NO_NEXT_PAGE: True
+    MAX_DIST_TO_STREET_VIEW: 25
+
+  GET_STREET_VIEW:
+    FOV_LIST: [60, 90, 120]
+
+  CHECK_SURROUNDING:
+    USED_MODELS: [DETECT]
+    CARED_LABELS_PATH: ../data/benchmark/place_types_20.txt
+    # categories that only serve as background reference
+    CANDIDATES: ''
+
+    DETECT:
+      NAME: GLIP_CLIP
+      PROPOSAL_SCORES: 0.55  # useless for GLIP_CLIP
+
+  DEBUG_IMAGE: False
+
+  EVALUATION:
+    EVAL_ONLY: False
+    REGION_FILE: ../data/benchmark/benchmark_localization_polygon_area/all_files.txt

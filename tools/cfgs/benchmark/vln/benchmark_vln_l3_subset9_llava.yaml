@@ -1,0 +1,12 @@
+_BASE_CONFIG_: cfgs/benchmark/benchmark_vln/benchmark_vln_l1.yaml
+
+PIPELINE:
+  NAVIGATION:
+    LANDMARK_DETECT:
+      MANNER: visual # [visual, oracle]
+      NAME: LLaVA
+      THRESH: 6.0
+      CANDIDATES: ""
+      
+    ACTION_PRED:
+      AUTO_REGRESSIVE: True

@@ -1,0 +1,99 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: BMVisionLanguageNavigation
+SAVE_INTERVAL: 1
+INIT_HEADING: 0
+
+PLATFORM:
+  MOVER:
+    # moving query mode
+    STREET_VIEW_QUERY: True
+    RADIUS_QUERY:
+      ENABLED: True
+      CONDITION_HEADING_RANGE: 30
+      MAX_RADIUS: 10
+      DELTA_RADIUS: 3
+      DELTA_HEADING: 45
+      HEADING_RANGE: 10  # ignore heading range when query radius
+
+  STREET_VIEW:
+    SIZE: [ 640, 640 ]
+    HEADING: 0
+    PITCH: 0
+    FOV: 45
+    SOURCE: outdoor
+    HEADING_RANGE:  360
+
+VISION_MODELS:
+  NAME_LIST: ["CLIP", "EvaCLIP", "LLaVA", "PaddleOCR"]
+
+  PaddleOCR:
+    DET_MODEL_DIR: /xxx/PaddleOCR/ckpt/ch_PP-OCRv4_det_server_infer
+    REC_MODEL_DIR: /xxx/PaddleOCR/ckpt/ch_PP-OCRv4_rec_server_infer
+    CLS_MODEL_DIR: /xxx/PaddleOCR/ckpt/ch_ppocr_mobile_v2.0_cls_slim_infer
+    USE_ANGLE_CLS: True
+    PROMPT: ocr_result_to_recognition_template
+    MODEL: gpt-3.5-turbo-0613
+  
+  EvaCLIP:
+    MODEL_NAME: EVA02-CLIP-bigE-14-plus
+    MODEL_PATH: /xxx/EVA/EVA-CLIP/rei
+
+  LLaVA:
+    MODEL_PATH: /xxx/LLaVA/llava-v1.5-13b
+    LOAD_8BIT: False
+    LOAD_4BIT: False
+
+AVATAR:
+  NAME: VLNBenchmarkRobot
+  CITY: New York
+  START_POSITION: [40.736294400898, -73.99343539662662]
+
+
+PIPELINE:
+  DATA:
+    ROUTE_PATH: ../output/collect_data/collect_vln_routes/default/route_infos.json
+
+  NAVIGATION:
+    NAME: VisionLanguageNavigator
+
+    LANDMARK_EXTRACT:
+      PROMPT: LANDMARK_EXTRACT_TEMPLATE
+      MODEL: gpt-4-0613
+
+    LANDMARK_DETECT:
+      MANNER: oracle # [visual, oracle]
+      # for visual observation only
+      NAME: CLIP
+      CANDIDATES: "æ,©,ø∆,¶,¬∂,®,others"
+      THRESH: 0.90
+      # for oracle observation only
+      ORACLE_RADIUS: 20
+      KEYPOINT_RADIUS: 5
+
+      INTERSECTION_VALID_RADIUS: 5
+
+    ACTION_PRED:
+      AUTO_REGRESSIVE: True
+      MODEL: gpt-4-0613
+      PROMPT: VLN_INTRO_TEMPLATE_V2
+
+    INTERRUPT:
+      ENABLED: True
+      STATIC_COUNTER: 5
+      OPPOSITE_COUNTER: 6
+      MAX_STEPS: 40
+
+    OUTPUT:
+      ROUTE_PATH: plan_trajectory.html
+      TRAJ_PATH: trajectory.html
+      FILE_TEMPLATE: polyline_template
+  
+  EVALUATION:
+    SUCCESS_RADIUS: 25
+
+    # for key point accuracy
+    STOP_ARRIVE_RADIUS: 20
+    INTERSECT_ARRIVE_RADIUS: 5
+    INTERSECT_REACT_RANGE: 3
+    

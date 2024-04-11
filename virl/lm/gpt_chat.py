@@ -33,6 +33,7 @@ class GPTChat(ChatBotTemplate):
                 temperature=self.temperature
             )
         except Exception as e:
+            print(e)
             print(f"Retry in {self.retry_time} seconds to avoid GPT rate limit")
             time.sleep(self.retry_time)
             return self._ask(content, **kwargs)

@@ -1,0 +1,55 @@
+_BASE_CONFIG_: cfgs/base_configs/default.yaml
+
+TASK: CollectVLNRoutes
+SAVE_INTERVAL: 1
+
+AGENT:
+  NAME: DataGenRobot
+  CITY: New York
+  START_POSITION: [40.733359, -74.002587]
+  BACKGROUND: "DataGenRobot is a data collection robot."
+  INTENTION: "I am collecting data for the benchmarking of the vision language navigation task."
+
+PIPELINE:
+  GENERATE_PLACE_QUEUE:
+    ENABLED: True # DISABLE
+
+    # path of polygon area, the origin and destination should all be in this route.
+    POLYGON_PATH: ../data/benchmark/benchmark_polygon_area/North_America/polygon_area_SoHo_NY.txt
+    PLACE_INFO_PATH: ../data/benchmark/place_centric_data/place_infos_valid.pickle
+    # the destination should be in these types
+    PLACE_TYPES: ../data/benchmark/place_types_20.txt
+    REGION_KEY: SoHo_NY_North_America
+
+    RADIUS_TO_STREET_VIEW: 20
+  
+  SAMPLE_START_POSITION:
+    MIN_RADIUS: 40
+    MAX_RADIUS: 150
+    SAPCING: 20
+
+  ROUTE:
+    ROUTE_MODE: driving
+    STOPOVER: False
+
+    # filtering some start positions
+    MAX_DISTANCE: 150
+    MIN_INTERSECT: 1
+    MAX_INTERSECT: 3
+    MAX_DISTANCE_TO_LANDMARK: 18
+    MIN_REVIEWS: 10
+  
+  GENERATE_INSTRUCTION:
+    INIT_HEADING: 0
+    MILESTONE_TEMPLATE: SINGLE_INTERSECTION_GIVEN_DIRECTION_TEMPLATE
+    ALL_INFO_PROMPT: LANGUAGE_INSTRUCTION_NAVIGATION_GIVEN_DIRECTION_TEMPLATE
+    MODEL: gpt-4-1106-preview # gpt-4-0613
+
+  OUTPUT:
+    ROUTE_PATH: plan_trajectory.html
+    TRAJ_PATH: trajectory.html
+    FILE_TEMPLATE: polyline_template
+
+TASK_INFO:
+  MAX_ROUTE_NUM: 10
+
