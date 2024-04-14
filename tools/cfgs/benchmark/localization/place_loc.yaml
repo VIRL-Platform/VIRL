@@ -57,7 +57,7 @@ PIPELINE:
   NAVIGATION:
     NAME: RouteNavigator
 
-    POLYGON_PATH: None
+    POLYGON_PATH: ../data/benchmark/benchmark_localization_polygon_area/North_America/polygon_area_SoHo_NY_mini1.txt
     ROUTE_PATH: None
     POINT_PATH: None
 
@@ -86,7 +86,7 @@ PIPELINE:
     CANDIDATES: ''
 
     DETECT:
-      NAME: GLIP_CLIP
+      NAME: GLIP
       PROPOSAL_SCORES: 0.55  # useless for GLIP_CLIP
 
   DEBUG_IMAGE: False

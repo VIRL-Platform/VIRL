@@ -1,0 +1,9 @@
+Africa/polygon_area_Surulere_Lagos.txt
+Asia/polygon_area_Lajpat_Nagar_New_Delhi.txt
+Asia/polygon_area_Prince_Edward_HK.txt
+Australia/polygon_area_SouthBank_Melbourne.txt
+Europe/polygon_area_Brera_Milan.txt
+Europe/polygon_area_Oxford_St_London.txt
+North_America/polygon_area_SoHo_NY.txt
+North_America/polygon_area_Union_Square_SF.txt
+South_America/polygon_area_Monserrat_Buenos.txt

@@ -52,7 +52,7 @@ AVATAR:
 
 PIPELINE:
   DATA:
-    ROUTE_PATH: ../output/collect_data/collect_vln_routes/default/route_infos.json
+    ROUTE_PATH: ../data/benchmark/collect_vln_routes/SoHo_NY_North_America/route_infos.json
 
   NAVIGATION:
     NAME: VisionLanguageNavigator

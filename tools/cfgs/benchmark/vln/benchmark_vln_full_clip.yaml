@@ -1,14 +1,10 @@
-_BASE_CONFIG_: cfgs/benchmark/benchmark_vln/benchmark_vln_l1.yaml
+_BASE_CONFIG_: cfgs/benchmark/vln/benchmark_vln_full_oracle.yaml
 
 PIPELINE:
   NAVIGATION:
     LANDMARK_EXTRACT:
-      PLACE_TYPE: ../data/place_types.txt
       PLACE_MODE: parenthesis # [parenthesis, sentence]
       
     LANDMARK_DETECT:
       MANNER: visual # [visual, oracle]
       THRESH: 0.995
-      
-    ACTION_PRED:
-      AUTO_REGRESSIVE: True

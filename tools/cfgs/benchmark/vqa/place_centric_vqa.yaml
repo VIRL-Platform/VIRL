@@ -77,5 +77,5 @@ PIPELINE:
 
 EVALUATION:
   EVAL_ONLY: False
-  REGION_FILE: ../data/place_centric_data/place_infos.pickle
+  REGION_FILE: ../data/benchmark/place_centric_data/place_infos.pickle
   EVAL_CONTENT: [city, continent, place_type]
