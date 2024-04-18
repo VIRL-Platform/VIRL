@@ -95,7 +95,8 @@ class Detector(object):
         is_detected = detect_results['labels'].shape[0] > 0
         if is_detected:
             object_views, is_detected_final, detect_results = self.adjust_camera_to_recheck_detection_result(
-                street_image, detect_results, candidates, adjust_camera=self.detect_cfg.ADJUST_CAMERA.ENABLED
+                street_image, detect_results, candidates,
+                adjust_camera=self.detect_cfg.get('ADJUST_CAMERA', None) and self.detect_cfg.ADJUST_CAMERA.ENABLED
             )
             is_detected = is_detected_final and is_detected
         else:

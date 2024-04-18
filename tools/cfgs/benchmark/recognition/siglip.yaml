@@ -1,0 +1,15 @@
+_BASE_CONFIG_: cfgs/benchmark/recognition/clip.yaml
+
+VISION_MODELS:
+  NAME_LIST: ["OpenCLIP"]
+
+  OpenCLIP:
+    TEMPERATURE: 100.0
+    # NAME: "ViT-B-16-SigLIP"
+    NAME: "ViT-L-16-SigLIP-384"
+    PRETRAINED: "webli"
+
+PIPELINE:
+  RECOGNITION:
+    # model name
+    NAME: OpenCLIP

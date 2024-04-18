@@ -3,13 +3,27 @@ _BASE_CONFIG_: cfgs/base_configs/default.yaml
 TASK: BMPlaceCentricRecognition
 
 VISION_MODELS:
-  NAME_LIST: ["CLIPLocal"]
+  NAME_LIST: ["CLIPLocal", "EvaCLIP", "OpenCLIP"]
 
   CLIPLocal:
     # NAME: "ViT-B/32"
     NAME: "ViT-L/14"
     # NAME: "ViT-L/14@336px"
     TEMPERATURE: 100.0
+  
+  EvaCLIP:
+    MODEL_NAME: "EVA02-CLIP-B-16"
+    # MODEL_NAME: "EVA02-CLIP-L-14"
+    # MODEL_NAME: "EVA02-CLIP-L-14-336"
+    MODEL_PATH: /xxx/EVA/EVA-CLIP/rei
+
+  OpenCLIP:
+    TEMPERATURE: 100.0
+    # NAME: "ViT-B-32"
+    # PRETRAINED: "laion2b_s34b_b79k"
+    NAME: "ViT-L-14"
+    PRETRAINED: "laion2B-s32B-b82K"
+
 
 AGENT:
   NAME: RecognitionRobot

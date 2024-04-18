@@ -1,11 +1,12 @@
 import glob
 import os
 import pickle
-from tqdm import tqdm
-import pandas as pd
 
+import pandas as pd
 import PIL.Image as Image
 import numpy as np
+
+from tqdm import tqdm
 
 from tools.tasks.task_template import TaskTemplate
 
@@ -113,8 +114,7 @@ class BMPlaceCentricRecognition(TaskTemplate):
 
         return overall_acc, mean_acc
 
-
-    def run(self, platform, avatar, chatbot, messager, args):
+    def run(self, platform, agent, chatbot, messager, args, **kwargs):
         pipeline_cfg = cfg.PIPELINE
 
         # step 1: prepare data

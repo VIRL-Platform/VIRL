@@ -22,3 +22,4 @@ webdriver_manager
 shapely
 ipdb
 pandas
+gradio_client

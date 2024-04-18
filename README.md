@@ -25,6 +25,7 @@
 ****
 
 ### Changelog
+[2024-04-18] **NEW!!** Release code for benchmark along with installation & curation & evaluation guideline.
 [2024-04-09] **NEW!!** Release code for agents and installation & deployment & running guideline.
 [2024-02-06] Release basic platform code.
 
@@ -40,7 +41,7 @@
   - [x] Ling
   - [x] Local
   - [x] Diego
-- [ ] Benchmarks
+- [x] Benchmarks
 - [x] Install & Deployment guideline
 - [ ] Platform Document
 

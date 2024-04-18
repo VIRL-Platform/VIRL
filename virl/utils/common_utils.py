@@ -3,6 +3,9 @@ import io
 import base64
 import logging
 import re
+import random
+import string
+import os
 
 import numpy as np
 
@@ -186,6 +189,24 @@ def dump_json_results(content, path):
 
     with open(path, 'w') as f:
         json.dump(content, f, default=convert, indent=4)
+
+
+def generate_name(length=20):
+    # Generate a random string of upper and lowercase letters and digits
+    letters_and_digits = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(letters_and_digits) for _ in range(length))
+    return random_string
+
+
+def save_tmp_image_to_file(img, output_dir, img_format='PNG'):
+    img_name = generate_name() + f".{img_format.lower()}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    img_path = os.path.join(output_dir, img_name)
+    img.save(img_path)
+    
+    return img_path
 
 
 def map_region_to_continent_city(region):

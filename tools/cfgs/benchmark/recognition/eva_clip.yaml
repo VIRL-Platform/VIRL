@@ -1,0 +1,6 @@
+_BASE_CONFIG_: cfgs/benchmark/recognition/clip.yaml
+
+PIPELINE:
+  RECOGNITION:
+    # model name
+    NAME: EvaCLIP

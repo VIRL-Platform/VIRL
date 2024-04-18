@@ -17,6 +17,8 @@ def main():
     output_dir = cfg.ROOT_DIR / 'output' / cfg.EXP_GROUP_PATH / cfg.TAG / args.extra_tag
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    cfg.OUTPUT_DIR = output_dir
+
     # Step 0: Initialize
     print_stage('Step 0: Initialize')
     platform, agent, chatbot, messager, custom_agent = pipeline.init_world_and_agent(cfg, output_dir)

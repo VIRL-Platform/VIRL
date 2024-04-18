@@ -26,8 +26,8 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='arg parser')
     parser.add_argument('--split_file', type=str, default='../data/benchmark/benchmark_polygon_area/split_list_9.txt', help='')
-    parser.add_argument('--route_dir_base', type=str, default='../data/benchmark/collect_vln_routes', help='')
-    parser.add_argument('--cfg_file', type=str, default='cfgs/benchmark/benchmark_vln/benchmark_vln_l1.yaml', help='')
+    parser.add_argument('--route_dir_base', type=str, default='../data/benchmark/collect_vln_routes_subset9', help='')
+    parser.add_argument('--cfg_file', type=str, default='cfgs/benchmark/vln/benchmark_vln_oracle.yaml', help='')
     parser.add_argument('--set', type=str, default='', help='')
     
     args = parser.parse_args()

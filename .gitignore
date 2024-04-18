@@ -20,4 +20,4 @@ temp_files/*
 *.DS_Store
 *.editorconfig
 *.vscode
-data/benchmark/place_centric_data*
+data/benchmark/*

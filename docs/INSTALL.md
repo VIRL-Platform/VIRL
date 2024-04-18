@@ -93,4 +93,3 @@ python app.py
 LIGHTGLUE:
     SERVER: http://xxx.xxx.xxx.xxx:xxxx # your ip and port here
 ```
-

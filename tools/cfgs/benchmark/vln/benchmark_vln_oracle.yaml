@@ -44,22 +44,24 @@ VISION_MODELS:
     LOAD_8BIT: False
     LOAD_4BIT: False
 
-AVATAR:
+AGENT:
   NAME: VLNBenchmarkRobot
   CITY: New York
   START_POSITION: [40.736294400898, -73.99343539662662]
+  BACKGROUND: "I am a robot designed for benchmarking Vision-Language Navigation tasks."
+  INTENTION: "Please give me instructions to guide me to the destination."
 
 
 PIPELINE:
   DATA:
-    ROUTE_PATH: ../data/benchmark/collect_vln_routes/SoHo_NY_North_America/route_infos.json
+    ROUTE_PATH: ../data/benchmark/collect_vln_routes/SoHo_NY_North_America/route_infos.json # for debug only
 
   NAVIGATION:
     NAME: VisionLanguageNavigator
 
     LANDMARK_EXTRACT:
       PROMPT: LANDMARK_EXTRACT_TEMPLATE
-      MODEL: gpt-4-0613
+      MODEL: gpt-4-1106-preview # gpt-4-0613
 
     LANDMARK_DETECT:
       MANNER: oracle # [visual, oracle]
@@ -75,8 +77,8 @@ PIPELINE:
 
     ACTION_PRED:
       AUTO_REGRESSIVE: True
-      MODEL: gpt-4-0613
-      PROMPT: VLN_INTRO_TEMPLATE_V2
+      MODEL: gpt-4-1106-preview # gpt-4-0613
+      PROMPT: VLN_INTRO_TEMPLATE
 
     INTERRUPT:
       ENABLED: True

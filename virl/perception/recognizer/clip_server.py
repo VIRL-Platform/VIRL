@@ -2,12 +2,10 @@ import argparse
 import gradio as gr
 import torch
 
-import torch
 import clip
 
 
 class CLIPWrapper(object):
-
     def __init__(self, args) -> None:
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -36,10 +34,9 @@ class CLIPWrapper(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=7861)
+    parser.add_argument("--port", type=int, default=22411)
     parser.add_argument("--model_name", type=str, default='ViT-L/14@336px')
     args = parser.parse_args()
-
 
     clip_wrapper = CLIPWrapper(args)
 
@@ -52,7 +49,6 @@ if __name__ == '__main__':
 
     # ======== output =========
     text_output = gr.Textbox(label="Output text")
-
 
     gr.Interface(
         description="CLIP.",

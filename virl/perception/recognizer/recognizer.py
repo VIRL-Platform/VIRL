@@ -20,6 +20,7 @@ class Recognizer(object):
             'LLaVA': ('virl.perception.recognizer.llava_client', 'LLaVAClient'),
             'PaddleOCR': ('virl.perception.recognizer.paddle_ocr', 'PaddleOCR'),
             'CLIPLocal': ('virl.perception.recognizer.clip_local', 'CLIPLocal'),
+            'OpenCLIP': ('virl.perception.recognizer.open_clip_local', 'OpenCLIPLocal'),
         }
 
         if self.recognize_cfg.NAME in recognizer_mapping:

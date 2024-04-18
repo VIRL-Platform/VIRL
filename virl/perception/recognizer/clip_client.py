@@ -1,16 +1,17 @@
+import os
 import ast
-
-import cv2
-import base64
 import requests
-import numpy as np
 
-from virl.utils.common_utils import encode_image_to_string, decode_string_to_image
+from gradio_client import Client
+
+from virl.utils import common_utils
+from virl.config import cfg
 
 
 class CLIPClient(object):
     def __init__(self, cfg):
         self.server_url = cfg.SERVER
+        self.client = Client(self.server_url)
 
     def inference(self, img, text, temperature=100.0, img_format=None):
         """
@@ -26,27 +27,24 @@ class CLIPClient(object):
         """
         if img_format is None:
             img_format = img.format
-        img_base64_string = encode_image_to_string(img)
+
+        output_dir = os.path.join(cfg.get('OUTPUT_DIR', 'output'), 'tmp')
+        img_path = common_utils.save_tmp_image_to_file(img, output_dir, img_format)
 
         while True:
             flag = True
             try:
-                response = requests.post(self.server_url + "/run/predict", json={
-                    "data": [
-                        f'data:image/{img_format.lower()};base64,{img_base64_string}',
-                        text,
-                        temperature
-                    ]
-                    },
-                    timeout=100
-                ).json()
+                answer = self.client.predict(
+                    img_path,
+                    text,  # str in 'Text' Textbox component
+                    temperature,  # float (numeric value between 1 and 100) in 'Temperature' Slider component
+                    api_name="/predict"
+                )
             except requests.Timeout:
                 print('Timeout! Resend the message.')
                 flag = False
             if flag:
                 break
-        assert 'data' in response, f'predict failed: {response}'
-        answer = response['data'][0]
         
         logit_list, score_list = ast.literal_eval(answer)
         logit_list = ast.literal_eval(logit_list)
@@ -56,6 +54,8 @@ class CLIPClient(object):
             'logits': logit_list,
             'scores': score_list,
         }
+        os.remove(img_path)
+
         return results
 
 
@@ -63,13 +63,13 @@ if __name__ == '__main__':
     from easydict import EasyDict
     from PIL import Image
 
-    cfg = {
-        'SERVER': 'http://147.8.183.198:22380',
+    cur_cfg = {
+        'SERVER': 'http://147.8.181.77:22411/',
     }
 
-    image = Image.open('/Users/dingry/Downloads/000200.jpeg')
+    image = Image.open('/home/jihan/Desktop/glip_img/jhotel.png')
     text = 'a beautiful street,,a beautiful building'
 
-    clip_client = CLIPClient(EasyDict(cfg))
-    print(clip_client.check(image, text, text, 100.0))
-    print(clip_client.check(image, text, text, 10.0))
+    clip_client = CLIPClient(EasyDict(cur_cfg))
+    print(clip_client.inference(image, text, 100.0))
+    print(clip_client.inference(image, text, 10.0))
