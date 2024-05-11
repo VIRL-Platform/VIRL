@@ -1,5 +1,6 @@
 intention_driven_qa_template = """
-Q: {question} Choices: A. {answer_a}; B. {answer_b}; C. {answer_c}; D. {answer_d}
+Q: {question} Choices: A. {answer_a}; B. {answer_b}; C. {answer_c}; D. {answer_d}.
+Please directly answer A, B, C, D.
 """
 
 

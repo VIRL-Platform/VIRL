@@ -129,6 +129,10 @@ class BMPlaceCentricVQA(TaskTemplate):
         if model_answer in match_candidate_list:
             return True, model_answer
 
+        # directly match the first word
+        if model_answer[0].lower() == answer.lower():
+            return True, model_answer
+        
         # Step 2: chatgpt to extract,
         candidate_answer = full_question.split(' Choices: ')[1].strip()
         question = full_question.split(' Choices: ')[0].strip().split('Q: ')[1].strip()
