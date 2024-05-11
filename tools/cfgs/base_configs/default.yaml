@@ -44,7 +44,7 @@ VISION_MODELS:
     SERVER: http://xxx.xxx.xxx.xxx:xxxx
 
   GPT4V:
-    PLACEHOLDER: True 
+    MODEL_NAME: gpt-4-turbo 
   
   NAME_LIST: ["CLIP", "EvaCLIP", "LLaVA"]
 
