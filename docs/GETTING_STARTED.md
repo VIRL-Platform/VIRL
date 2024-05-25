@@ -113,7 +113,7 @@ USER_STATUS: False # take user status for revise plan or not
 - We pre-collect place-centric image data for `V-IRL Place Recognition & VQA Benchmark` and routes for `V-IRL Vision-Language Navigation Benchmark`.
 
 #### 3.1.1 V-IRL Place Recognition & VQA Benchmark data
-- Please download our collected data for `V-IRL Place Recognition & VQA benchmark` [here](https://drive.google.com/file/d/1Y1UkL1_RHR3Zv-yFPeql1Tm9srFZaB7c/view?usp=sharing).
+- Please download our collected data for `V-IRL Place Recognition & VQA benchmark` [here](https://drive.google.com/file/d/1Kdrgami6_zeQ8rlB_bLrvuSJae7CthXy/view?usp=sharing).
 
 - Move the downloaded `.zip` file to `/YOUR_PATH_TO_VIRL/VIRL/data/benchmark/` and then
 ```shell
