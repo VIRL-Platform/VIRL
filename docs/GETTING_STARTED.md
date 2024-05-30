@@ -133,7 +133,7 @@ unzip virl_place_recognition_vqa_data.zip
 ```
 
 #### 3.1.2 V-IRL Place Recognition & VQA Benchmark data
-- Please download our collected data for `V-IRL Vision-Language Navigation Benchmark` [full set](https://drive.google.com/file/d/1EfcfWvi-cUQTXeT8W0jkRIpxA3BFnnPn/view?usp=drive_link) and [mini set](https://drive.google.com/file/d/1jNpafSnclsfFpwcJbNHfNEiKGyyV2FS-/view?usp=drive_link).
+- Please download our collected data for `V-IRL Vision-Language Navigation Benchmark` [full set](https://drive.google.com/file/d/1EfcfWvi-cUQTXeT8W0jkRIpxA3BFnnPn/view?usp=sharing) and [mini set](https://drive.google.com/file/d/1jNpafSnclsfFpwcJbNHfNEiKGyyV2FS-/view?usp=sharing).
 
 - Move the downloaded `.zip` file to `/YOUR_PATH_TO_VIRL/VIRL/data/benchmark/` and then
 ```shell
