@@ -29,6 +29,8 @@ class BMPlaceCentricVQA(TaskTemplate):
         self.ckpt_path = self.output_dir / cfg.PIPELINE.VQA.MM_LLM / 'prediction_results.pkl'
         self.ckpt_path.parent.parent.mkdir(parents=True, exist_ok=True)
         self.ckpt_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        self.max_number = cfg.EVALUATION.get('MAX_NUMBER', -1)
 
         self.prediction_results = {}
         if os.path.exists(self.ckpt_path):
@@ -48,15 +50,20 @@ class BMPlaceCentricVQA(TaskTemplate):
         # step 2: load multi-modal large language model
         mm_llm = MultiModalLLM(cfg.VISION_MODELS, pipeline_cfg.VQA.MM_LLM)
 
+        eval_func = getattr(self, pipeline_cfg.VQA.get('EVAL_FUNC', 'circular_eval'))
+        
         # step 3: run vqa
         for i, image_path in tqdm(enumerate(self.image_paths), total=len(self.image_paths)):
+            if self.max_number > 0 and i >= self.max_number:
+                break
+            
             place_id = os.path.basename(image_path).split('.')[0]
 
             if place_id in self.prediction_results:
                 continue
 
             image = Image.open(image_path)
-            is_correct, model_answers, model_answers_raw = self.circular_eval(
+            is_correct, model_answers, model_answers_raw = eval_func(
                 mm_llm, image, self.qa_pairs[place_id], pipeline_cfg.VQA)
             self.prediction_results[place_id] = {
                 'is_correct': is_correct,
@@ -67,8 +74,8 @@ class BMPlaceCentricVQA(TaskTemplate):
             self.save_results()
 
         # step 4: calculate accuracy
-        self.calculate_accuracy()
-        
+        results = self.calculate_accuracy(self.prediction_results)
+        print(results)
         self.save_results()
 
     def load_data_and_gt(self, data_cfg):
@@ -101,6 +108,25 @@ class BMPlaceCentricVQA(TaskTemplate):
             answer_idx = (answer_idx - 1) % len(answer_choice_list)
             answer = answer_choice_list[answer_idx]
             candidate_answer_list = candidate_answer_list[1:] + [candidate_answer_list[0]]
+
+        if is_correct:
+            self.tp += 1
+        return is_correct, model_answers, model_answers_raw
+
+    def single_pass_eval(self, mm_llm, image, qa_pair, eval_cfg):
+        question = qa_pair['question']
+        answer = qa_pair['answer']
+        candidate_answer_list = [qa_pair['answer_a'], qa_pair['answer_b'], qa_pair['answer_c'], qa_pair['answer_d']]
+
+        # get answer from multi-modal large language model
+        model_answers, model_answers_raw = [], []
+
+        full_question = self.create_full_question(eval_cfg, candidate_answer_list, question)
+        model_answer_raw = mm_llm.check(image, full_question, return_json=False)
+        model_answers_raw.append(model_answer_raw)
+
+        is_correct, model_answer = self.parse_model_answer(eval_cfg, full_question, answer, model_answer_raw)
+        model_answers.append(model_answer)
 
         if is_correct:
             self.tp += 1
@@ -142,6 +168,7 @@ class BMPlaceCentricVQA(TaskTemplate):
             options=candidate_answer,
             prediction=model_answer
         )
+
         parsed_answer = self.chatbot.ask(prompt, model=eval_cfg.MODEL, json=False)
 
         return answer == parsed_answer, parsed_answer
