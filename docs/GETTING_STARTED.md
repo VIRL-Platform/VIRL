@@ -17,7 +17,7 @@ python -m virl.ui.server
 - Follow the commands below to run Peng.
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/peng/peng.yaml
+python launcher.py --cfg_file cfgs/peng/peng.yaml
 ```
 
 - If you want to modify the waypoints, please modify the `WAY_POINT_LANGUAGE` in the config.
@@ -26,11 +26,11 @@ python launch.py --cfg_file cfgs/peng/peng.yaml
 - Follow the commands below to run Aria that recommend places using Google Place reviews.
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/aria/aria.yaml
+python launcher.py --cfg_file cfgs/aria/aria.yaml
 ```
 - Or you can run Aria that recommend places using web search.
 ```shell
-python launch.py --cfg_file cfgs/aria/aria_websearch.yaml
+python launcher.py --cfg_file cfgs/aria/aria_websearch.yaml
 ```
 
 - Notice that Aria might recommend different restaurants as Google Map Platform providing different `nearby search` results as time goes by.
@@ -39,18 +39,18 @@ python launch.py --cfg_file cfgs/aria/aria_websearch.yaml
 - Follow the commands below to run Vivek estate recommendation.
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/vivek/vivek.yaml
+python launcher.py --cfg_file cfgs/vivek/vivek.yaml
 ```
 
 #### RX399
 - Follow the commands below to run RX-399 trash bin counting on New York City,
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/rx399/rx399_ny.yaml
+python launcher.py --cfg_file cfgs/rx399/rx399_ny.yaml
 ```
 - or Hong Kong
 ```shell
-python launch.py --cfg_file cfgs/rx399/rx399_hk.yaml
+python launcher.py --cfg_file cfgs/rx399/rx399_hk.yaml
 ```
 - **Note**: We find that the Google Map Platform returns different street view images now. Please refer to these [images](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/jhyang13_connect_hku_hk/EjDHXgZ-_EJHh7vKlREKgA8BS5aakbT1s7_li7PmlWVClQ?e=f3oTw8) to check results in our previous attempts.
 
@@ -59,10 +59,10 @@ python launch.py --cfg_file cfgs/rx399/rx399_hk.yaml
 - Follow the commands below to run Imani `trash bin` & `hydrant` & `bench` distribution statistic on Central Park, New York City.
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/imani/imani.yaml
+python launcher.py --cfg_file cfgs/imani/imani.yaml
 ```
 
-- Note: Imani will takes a huge amount of Google Map Platform credits, around `$300-$400`.
+- Note: Imani will take a huge amount of Google Map Platform credits, around `$300-$400`.
 
 - We provide our collected heatmap data [here](https://drive.google.com/drive/folders/17YTC0fCrxbdA--2DPE417uSD1wTlw2bJ?usp=sharing).
 
@@ -70,7 +70,7 @@ python launch.py --cfg_file cfgs/imani/imani.yaml
 - Follow the commands below to attempt Hiro intentional exploring in Hong Kong street.
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/hiro/hiro.yaml
+python launcher.py --cfg_file cfgs/hiro/hiro.yaml
 ```
 
 #### Local
@@ -79,33 +79,33 @@ python launch.py --cfg_file cfgs/hiro/hiro.yaml
 ```shell
 cd tools
 # Example of MoMA design store in NYC
-python launch.py --cfg_file cfgs/local/local_nyc_case1.yaml
+python launcher.py --cfg_file cfgs/local/local_nyc_case1.yaml
 # Example of Apple store in San Francisco
-python launch.py --cfg_file cfgs/local/local_sf_iphone.yaml 
+python launcher.py --cfg_file cfgs/local/local_sf_iphone.yaml 
 ```
 
 #### Ling
-- Follow the commands below to run Ling navigation according to instruction in the city street.
+- Follow the commands below to run Ling navigation according to instructions in the city street.
 ```shell
 cd tools
 # Example of MoMA design store in NYC
-python launch.py --cfg_file cfgs/ling/ling_nyc_moma.yaml
+python launcher.py --cfg_file cfgs/ling/ling_nyc_moma.yaml
 # Example of Apple store in San Francisco
-python launch.py --cfg_file cfgs/ling/ling_sf_applestore.yaml
+python launcher.py --cfg_file cfgs/ling/ling_sf_applestore.yaml
 ```
-- *Note*: For better reproduction cases in our paper, we provide previous generated route.
+- *Note*: For better reproduction cases in our paper, we provide previously generated routes.
 
 
 #### Diego
 - Follow the commands below to get Diego's Itinerary for you.
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/diego/diego.yaml
+python launcher.py --cfg_file cfgs/diego/diego.yaml
 ```
 - By default, we disable taking user language & status adjustment. To open, please modify the following keys in the [config](../tools/cfgs/diego/diego.yaml) to `True`:
 ```yaml
-USER_INPUT: False # take user input for revise plan or not
-USER_STATUS: False # take user status for revise plan or not
+USER_INPUT: False # take user input for revising plan or not
+USER_STATUS: False # take user status for revising plan or not
 ```
 
 ## 3. V-IRL Benchmark
@@ -133,7 +133,7 @@ unzip virl_place_recognition_vqa_data.zip
 ```
 
 #### 3.1.2 V-IRL Place Recognition & VQA Benchmark data
-- Please download our collected data for `V-IRL Vision-Language Navigation Benchmark` [full set](https://drive.google.com/file/d/1EfcfWvi-cUQTXeT8W0jkRIpxA3BFnnPn/view?usp=drive_link) and [mini set](https://drive.google.com/file/d/1jNpafSnclsfFpwcJbNHfNEiKGyyV2FS-/view?usp=drive_link).
+- Please download our collected data for `V-IRL Vision-Language Navigation Benchmark` [full set](https://drive.google.com/file/d/1EfcfWvi-cUQTXeT8W0jkRIpxA3BFnnPn/view?usp=sharing) and [mini set](https://drive.google.com/file/d/1jNpafSnclsfFpwcJbNHfNEiKGyyV2FS-/view?usp=sharing).
 
 - Move the downloaded `.zip` file to `/YOUR_PATH_TO_VIRL/VIRL/data/benchmark/` and then
 ```shell
@@ -157,20 +157,20 @@ unzip virl_benchmark_vln_mini.zip
 ```
 
 ### 3.2. Collect your own data (optional)
-- As mentioned in our paper, we create a automatic data curation and annotation pipeline in `VIRL`. If you just want to **test some models** in `V-IRL benchmark`, you can just pass this part. Nevertheless, if you want to collect your own data as `V-IRL benchmark`, you can refer to this section.
+- As mentioned in our paper, we create an automatic data curation and annotation pipeline in `VIRL`. If you just want to **test some models** in `V-IRL benchmark`, you can just pass this part. Nevertheless, if you want to collect your own data as `V-IRL benchmark`, you can refer to this section.
 
 #### 3.2.1 V-IRL Place Recognition benchmark
-- Here, we first need to collect place-centric images and related place information as follow:
+- Here, we first need to collect place-centric images and related place information as follows:
 ```shell
 cd tools
-python launch.py --cfg_file cfgs/collect_data/collect_place_centric_data.yaml
+python launcher.py --cfg_file cfgs/collect_data/collect_place_centric_data.yaml
 ```
 - The place-centric image and place information will also be used in `V-IRL Place VQA benchmark`.
 
 #### 3.2.2 V-IRL Place VQA benchmark
 - First, please make sure you have already collect place-centric images follow the section `3.2.1` . Then, run the following code to generate VQA pairs based on place-centric images and information
 ```shell
-python launch.py --cfg_file cfgs/collect_data/generate_place_vqa_data.yaml
+python launcher.py --cfg_file cfgs/collect_data/generate_place_vqa_data.yaml
 ```
 
 #### 3.2.3 V-IRL Place Localization benchmark
@@ -192,10 +192,10 @@ python scripts/batch_collect_vln_routes.py
 
 - Take `CLIP` as an example, run the following script to benchmark it:
 ```shell
-python launch.py --cfg_file cfgs/benchmark/recognition/clip.yaml
+python launcher.py --cfg_file cfgs/benchmark/recognition/clip.yaml
 ```
 
-- Configs for other models lies in `tools/cfgs/benchmark/recognition/*`  
+- Configs for other models lie in `tools/cfgs/benchmark/recognition/*`  
 
 
 #### 3.3.2 V-IRL Place VQA benchmark
@@ -203,7 +203,7 @@ python launch.py --cfg_file cfgs/benchmark/recognition/clip.yaml
 `virl/perception/mm_llm/`.
 - Take `BLIP2` as an example, run the following script to benchmark it:
 ```shell
-python launch.py --cfg_file cfgs/benchmark/vqa/place_centric_vqa.yaml
+python launcher.py --cfg_file cfgs/benchmark/vqa/place_centric_vqa.yaml
 ```
 - Modify the following keys in `cfgs/benchmark/vqa/place_centric_vqa.yaml` to switch between different models:
 ```yaml
@@ -240,10 +240,10 @@ PIPELINE:
 #### 3.3.3 V-IRL Place Localization benchmark
 - The benchmarked methods of this benchmark are mainly implemented in
 `virl/perception/detector/`.
-- To run single detector `GLIP` as an example
+- To run a single detector `GLIP` as an example
   
 ```shell
-python launch.py --cfg_file cfgs/benchmark/localization/place_loc.yaml
+python launcher.py --cfg_file cfgs/benchmark/localization/place_loc.yaml
 ```
 - Modify the following keys in `cfgs/benchmark/localization/place_loc.yaml` to switch between different models:
 ```yaml
@@ -285,7 +285,7 @@ python scripts/batch_benchmark_place_loc.py
 
 - Take `oracle` as an example
 ```shell
-python launch.py --cfg_file cfgs/benchmark/vln/benchmark_vln_oracle.yaml
+python launcher.py --cfg_file cfgs/benchmark/vln/benchmark_vln_oracle.yaml
 ```
 - To evaluate on different vision models, please fill in the following keys in `cfgs/benchmark/vln/benchmark_vln_oracle.yaml`
 ```yaml
@@ -308,7 +308,7 @@ VISION_MODELS:
     LOAD_8BIT: False
     LOAD_4BIT: False
 ```
-- Configs for other models lies in `tools/cfgs/benchmark/vln/*`.
+- Configs for other models lie in `tools/cfgs/benchmark/vln/*`.
 
 - To run single models (`oracle` as an example here) on all regions with a single command, please run:
 ```shell
