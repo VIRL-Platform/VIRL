@@ -28,7 +28,7 @@ PIPELINE:
     WAY_POINT_PARSE_TEMPLATE: NAVIGATION_LANGUAGE_TO_WAYPOINT_LIST
 
     MAX_GO_BACK: 3
-    MODEL: gpt-4-1106-preview
+    MODEL: gpt-4-turbo
     OPTIMIZED: True # optimized to the shortest path or not
     STOPOVER: True
 
