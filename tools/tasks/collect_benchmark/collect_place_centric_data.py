@@ -189,7 +189,7 @@ class CollectPlaceCentricData(TaskTemplate):
             elif os.path.exists(relocate_point_save_path):
                 seed_positions = common_utils.load_points_in_txt_to_list(relocate_point_save_path)
             else:
-                seed_positions = geocode_utils.relocate_point_list_in_polygon(
+                seed_positions, _ = geocode_utils.relocate_point_list_in_polygon(
                     platform, seed_positions, polygon
                 )
                 common_utils.save_points_to_txt(relocate_point_save_path, seed_positions)

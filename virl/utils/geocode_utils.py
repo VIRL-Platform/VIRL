@@ -306,16 +306,14 @@ def is_point_in_quadrangle(point, quadrangle):
 def relocate_point_list_in_polygon(platform, point_list, polygon):
     relocated_points = {}
     for point in tqdm.tqdm(point_list, total=len(point_list)):
-        relocated_position, _ = platform.relocate_geocode_by_source(point, source='outdoor')
+        relocated_position, pano_id = platform.relocate_geocode_by_source(point, source='outdoor')
         if relocated_position is None or not is_point_in_quadrangle(relocated_position, polygon):
             continue
 
         if relocated_position not in relocated_points:
-            relocated_points[relocated_position] = 1
-        else:
-            relocated_points[relocated_position] += 1
+            relocated_points[relocated_position] = pano_id
 
-    return list(relocated_points.keys())
+    return list(relocated_points.keys()), list(relocated_points.values())
 
 
 def euclidean_distance(coord1, coord2):
@@ -490,7 +488,8 @@ def is_heading_in_range(heading_range, heading, heading_epsilon=0.0):
     
     if heading_left < heading_right:
         return heading_left <= heading <= heading_right
-    else: # wraps around 0/360
+    else:
+        # wraps around 0/360
         return heading >= heading_left or heading <= heading_right
 
 
@@ -505,3 +504,92 @@ def get_heading_list_by_range_and_fov(cur_heading, heading_range, fov):
         heading_list.append((start_heading + i * fov) % 360)
 
     return heading_list
+
+
+def calculate_square_region(point1, point2, buffer=10):
+    lat1, lng1 = point1
+    lat2, lng2 = point2
+    # Constants
+    R = 6378137  # Radius of the Earth in meters
+
+    def offset_point(lat, lon, d, angle):
+        lat1 = math.radians(lat)
+        lon1 = math.radians(lon)
+        brng = math.radians(angle)
+
+        lat2 = math.asin(math.sin(lat1) * math.cos(d / R) + math.cos(lat1) * math.sin(d / R) * math.cos(brng))
+        lon2 = lon1 + math.atan2(math.sin(brng) * math.sin(d / R) * math.cos(lat1),
+                                 math.cos(d / R) - math.sin(lat1) * math.sin(lat2))
+        return math.degrees(lat2), math.degrees(lon2)
+
+    # Calculate the angle of the line between the two points
+    angle = math.atan2(lng2 - lng1, lat2 - lat1) * 180 / math.pi
+
+    # Calculate the internal buffer points
+    lat1_inner_offset1, lng1_inner_offset1 = offset_point(lat1, lng1, buffer, angle + 90)
+    lat1_inner_offset2, lng1_inner_offset2 = offset_point(lat1, lng1, buffer, angle - 90)
+    lat2_inner_offset1, lng2_inner_offset1 = offset_point(lat2, lng2, buffer, angle + 90)
+    lat2_inner_offset2, lng2_inner_offset2 = offset_point(lat2, lng2, buffer, angle - 90)
+
+    # Inner square region coordinates
+    inner_square_region = [
+        (lat1_inner_offset1, lng1_inner_offset1),
+        (lat1_inner_offset2, lng1_inner_offset2),
+        (lat2_inner_offset1, lng2_inner_offset1),
+        (lat2_inner_offset2, lng2_inner_offset2)
+    ]
+
+    return inner_square_region
+
+
+def extend_line(point1, point2, extension_distance):
+    def calculate_new_point(lat, lon, bearing, distance):
+        R = 6378.1  # Radius of the Earth in km
+        bearing = math.radians(bearing)
+
+        lat1 = math.radians(lat)
+        lon1 = math.radians(lon)
+
+        lat2 = math.asin(math.sin(lat1) * math.cos(distance / R) + 
+                         math.cos(lat1) * math.sin(distance / R) * math.cos(bearing))
+        lon2 = lon1 + math.atan2(math.sin(bearing) * math.sin(distance / R) * math.cos(lat1),
+                            math.cos(distance / R) - math.sin(lat1) * math.sin(lat2))
+
+        return math.degrees(lat2), math.degrees(lon2)
+
+    def calculate_bearing(pointA, pointB):
+        lat1 = math.radians(pointA[0])
+        lat2 = math.radians(pointB[0])
+        diff_long = math.radians(pointB[1] - pointA[1])
+
+        x = math.sin(diff_long) * math.cos(lat2)
+        y = math.cos(lat1) * math.sin(lat2) - (math.sin(lat1) * math.cos(lat2) * math.cos(diff_long))
+
+        initial_bearing = math.atan2(x, y)
+        initial_bearing = math.degrees(initial_bearing)
+        compass_bearing = (initial_bearing + 360) % 360
+
+        return compass_bearing
+
+    distance_km = extension_distance / 1000  # convert meters to kilometers
+
+    bearing = calculate_bearing(point1, point2)
+
+    # Extend in the direction of point1 to point2
+    extended_point2 = calculate_new_point(point2[0], point2[1], bearing, distance_km)
+
+    # Extend in the opposite direction
+    opposite_bearing = (bearing + 180) % 360
+    extended_point1 = calculate_new_point(point1[0], point1[1], opposite_bearing, distance_km)
+
+    return extended_point1, extended_point2
+
+
+def calculate_square_region_with_extend(point1, point2, extend_dis=10):
+    extended_point1, extended_point2 = extend_line(
+        point1, point2, extension_distance=extend_dis
+    )
+    square_region = calculate_square_region(
+        extended_point1, extended_point2, buffer=extend_dis
+    )
+    return square_region

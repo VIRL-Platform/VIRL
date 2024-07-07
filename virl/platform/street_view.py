@@ -1,4 +1,6 @@
 import cv2
+import PIL.Image as Image
+
 import numpy as np
 
 
@@ -63,12 +65,12 @@ def lonlat2XY(lonlat, shape):
     return out
 
 
-def get_perspective_from_panorama(img_name, FOV, heading, pitch, height, width, north_rotation):
+def get_perspective_from_panorama(_img, FOV, heading, pitch, height, width, north_rotation):
     """
     Modified from https://github.com/fuenwang/Equirec2Perspec
     heading is left/right angle, pitch is up/down angle, both in degree
     Args:
-        img_name:
+        _img:
         FOV:
         heading:
         pitch:
@@ -81,8 +83,7 @@ def get_perspective_from_panorama(img_name, FOV, heading, pitch, height, width, 
     """
     # adjust heading to match the Google street view format
     heading = ((heading - 180) % 360 + north_rotation) % 360
-
-    _img = cv2.imread(img_name, cv2.IMREAD_COLOR)
+    
     [_height, _width, _] = _img.shape
 
     f = 0.5 * width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
@@ -112,5 +113,8 @@ def get_perspective_from_panorama(img_name, FOV, heading, pitch, height, width, 
     XY = lonlat2XY(lonlat, shape=_img.shape).astype(np.float32)
     persp = cv2.remap(_img, XY[..., 0], XY[..., 1], cv2.INTER_CUBIC, borderMode=cv2.BORDER_WRAP)
 
-    return persp
+    # Convert the final obtained image to a PIL Image
+    persp_rgb = cv2.cvtColor(persp, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+    pil_image = Image.fromarray(persp_rgb)
 
+    return pil_image

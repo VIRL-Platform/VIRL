@@ -34,7 +34,9 @@ class Detector(object):
             'GLIP': ('virl.perception.detector.glip_client', 'GLIPClient'),
             'GLIP_CLIP': ('virl.perception.detector.glip_clip_client', 'GLIPCLIPClient'),
             'GroundingDINO': ('virl.perception.detector.grounding_dino', 'GroundingDINO'),
-            'OWL_VIT': ('virl.perception.detector.owl_vit', 'OWLVIT')
+            'OWL_VIT': ('virl.perception.detector.owl_vit', 'OWLVIT'),
+            'OWL_VITv2': ('virl.perception.detector.owl_vitv2', 'OWLVITv2'),
+            'OpenSeeD': ('virl.perception.detector.openseed', 'OpenSeeD'),
         }
 
         if self.detect_cfg.NAME in detector_mapping:

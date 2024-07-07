@@ -75,6 +75,7 @@ PIPELINE:
     PLACE_TYPE: ['establishment', 'point_of_interest']
     NO_NEXT_PAGE: True
     MAX_DIST_TO_STREET_VIEW: 25
+    MIN_REVIEWS: 30
 
   GET_STREET_VIEW:
     FOV_LIST: [60, 90, 120]

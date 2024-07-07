@@ -22,6 +22,10 @@ class MultiModalLLM(object):
             'MiniGPT4': ('.minigpt4_client', 'MiniGPT4Client'),
             'Shikra': ('.shikra_client', 'ShikraClient'),
             'GPT4V': ('.gpt4v', 'GPT4V'),
+            "QwenVL": (".qwen_vl", "QwenVL"),
+            "LLaVANext": (".llava_next", "LLaVANext"),
+            'MGM': ('.minigemini', 'MGM'),
+            'InternVL': ('.internvl', 'InternVL'),
         }
 
         if name in model_mapping:

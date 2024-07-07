@@ -1,6 +1,10 @@
 import os
 import time
 import requests
+import pickle
+import warnings
+import cv2
+import json
 
 import PIL.Image as Image
 
@@ -10,7 +14,7 @@ from shapely.geometry import Point
 
 from virl.utils.common_utils import ComparableObj
 from virl.utils import geocode_utils, common_utils
-from virl.platform.street_view import StreetViewImage
+from virl.platform.street_view import StreetViewImage, get_perspective_from_panorama
 
 
 class GoogleMapAPI(object):
@@ -28,6 +32,28 @@ class GoogleMapAPI(object):
             'place_photos': 'https://maps.googleapis.com/maps/api/place/photo'
         }
 
+        offline_cfg = kwargs['offline_cfg']
+        if offline_cfg.ENABLED:
+            self.offline_cfg = offline_cfg
+            self.init_offline(offline_cfg)
+    
+    def init_offline(self, offline_cfg):
+        self.offline_mode = True
+        
+        self.panorama_dir = offline_cfg.PANORAMA_DIR
+        self.mapping_path = offline_cfg.GPS_TO_PANO_PATH
+        
+        if self.panorama_dir != 'None':
+            self.offline_pano = True
+            print(f'Offline panorama mode is enabled. Panorama dir: {self.panorama_dir}')
+        
+        if self.mapping_path != 'None':
+            self.offline_mapping = True
+            print(f'Offline mapping mode is enabled. Mapping path: {self.mapping_path}')
+            self.gps_to_pano_mapping = pickle.load(open(self.mapping_path, 'rb'))
+
+        # TODO: add place information
+
     def get_geocode_from_address(self, address: str, language='en') -> tuple:
         """
         Parse natural language address to geocode, a.k.a latitude and longitude
@@ -41,7 +67,6 @@ class GoogleMapAPI(object):
             (latitude, longitude)
         """
         base_url = self.base_urls['geocode']
-        url = f'{base_url}?address={address}&key={self.key}'
 
         params = {
             'address': address,
@@ -305,6 +330,16 @@ class GoogleMapAPI(object):
         Returns:
             image: google street view image
         """
+        # Check the offline cache
+        if self.offline_mode and self.offline_pano:
+            is_success, street_image = self.get_streetview_from_geocode_offline(
+                geocode, size, heading, pitch, fov, source, idx
+            )
+            if is_success:
+                return street_image
+            else:
+                warnings.warn(f'Cannot find the streetview image for {geocode} in offline database. Call online api.')
+
         base_url = self.base_urls['streetview']
         # example url:
         # https://maps.googleapis.com/maps/api/streetview?size=400x400&location=47.5763831,-122.4211769&fov=80&heading=0&pitch=0&key=YOUR_API_KEY
@@ -333,7 +368,56 @@ class GoogleMapAPI(object):
 
         return street_image
 
+    def get_streetview_from_geocode_offline(self, geocode: tuple, size: tuple, heading: int,
+                                            pitch: int, fov: int, source: str = 'outdoor',
+                                            idx=None, **kwargs):
+        """
+        Args:
+            geocode (tuple): latitude and longitude
+            size (tuple): (width, height). 640x640 is the max size for free user.
+            heading (int): The compass heading of the camera.
+            pitch (int): Angle of camera's vertical axis. Value range in [-90, 90]
+            fov (int): Field of view of the camera in degrees, which must be between 10 and 120.
+            source (str): default or outdoor
+            idx (int): the index of the image in the check around process
+
+        Returns:
+            image: google street view image
+        """
+        # Step 1: load the panorama image accrodnig to the geocode
+        # map the geocode to the panorama id
+        if geocode in self.gps_to_pano_mapping:
+            pano_id = self.gps_to_pano_mapping[geocode]
+        else:
+            geocode, pano_id = self.relocate_geocode_by_source(geocode, source=source)
+        
+        # Step 2: load the panorama image
+        pano_img_path = os.path.join(self.panorama_dir, f'{pano_id}.jpg')
+        pano_image_metadata_path = os.path.join(self.panorama_dir, f'{pano_id}.metadata.json')
+        if not os.path.exists(pano_img_path):
+            warnings.warn(f'Cannot find the panorama image for {pano_id} in {self.panorama_dir}')
+            return False, None
+
+        img = cv2.imread(pano_img_path, cv2.IMREAD_COLOR)
+        img_metadata = json.load(open(pano_image_metadata_path, 'r'))
+        north_rotation = img_metadata['rotation']
+        image = get_perspective_from_panorama(img, fov, heading, pitch, size[1], size[0], north_rotation)
+        
+        street_image = StreetViewImage(
+            image, heading, pitch, fov, geocode, i=idx
+        )
+
+        return True, street_image
+        
     def relocate_geocode_by_source(self, geocode: tuple, source: str = 'outdoor'):
+        if self.offline_mode and self.offline_mapping:
+            is_success, new_geocode, pano_id = self._relocate_geocode_by_source_offline(geocode)
+            if is_success:
+                return new_geocode, pano_id
+            else:
+                warnings.warn(f'Cannot find the nearest geocode within {self.offline_cfg.MAPPING_RADIUS} '
+                              f'for {geocode}. Call online api.')
+        
         base_url = self.base_urls['streetview_meta']
 
         params = {
@@ -351,6 +435,27 @@ class GoogleMapAPI(object):
             return None, None
         else:
             print(f'Relocated geocode error: {response_json}')
+
+    def _relocate_geocode_by_source_offline(self, geocode: tuple):
+        # for the case that geocode is in the mapping file, directly get the pano id
+        geocode = tuple(geocode)
+        if geocode in self.gps_to_pano_mapping:
+            pano_id = self.gps_to_pano_mapping[geocode]
+            return True, geocode, pano_id
+        
+        # for the case that geocode is not in the mapping file,
+        # calculate the disatnce to find the nearest geocode.
+        gps_list = list(self.gps_to_pano_mapping.keys())
+        distance_matrix = geocode_utils.cal_distance_between_two_position_list(
+            [geocode], gps_list
+        )[0]
+        
+        if distance_matrix.min() < self.offline_cfg.MAPPING_RADIUS:
+            nearest_geocode = gps_list[distance_matrix.argmin()]
+            pano_id = self.gps_to_pano_mapping[nearest_geocode]
+            return True, nearest_geocode, pano_id
+        else:
+            return False, None, None
 
     def get_routing(self, origin, destination, mode='walking', avoid='indoor', language='en',
                     way_points=None, polyline=False, stopover=False, optimized=False,

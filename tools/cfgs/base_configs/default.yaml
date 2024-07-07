@@ -101,3 +101,17 @@ PLATFORM:
       DELTA_HEADING: 45
       HEADING_RANGE: 20
 
+  OFFLINE:
+    ENABLED: False
+    # for get street view
+    PANORAMA_DIR: None # /data/projects/VIRL_internal/output/snapshot/vln/all_panos
+    # for relocating points to panorama id
+    GPS_TO_PANO_PATH: None # /data/projects/VIRL_internal/output/snapshot/vln/gps_pano_mapping.pkl
+    # If the distance between two points is less than this value, 
+    # they are considered the same point.
+    # Otherwise, will call the online method.
+    MAPPING_RADIUS: 5
+
+    # TODO: for nearby search
+    place_info_path: None
+

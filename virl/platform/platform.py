@@ -6,8 +6,11 @@ from virl.utils import geocode_utils
 
 
 class Platform(GoogleMapAPI):
-    def __init__(self, platform_cfg, output_dir):
-        super().__init__()
+    def __init__(self, platform_cfg, output_dir, **kwargs):
+        offline_cfg = platform_cfg.get('OFFLINE', None)
+        kwargs['offline_cfg'] = offline_cfg
+        
+        super().__init__(**kwargs)
         self.platform_cfg = platform_cfg
         self.mover = None
         self.output_dir = output_dir

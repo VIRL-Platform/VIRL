@@ -13,7 +13,7 @@ from tools.tasks.task_template import TaskTemplate
 from virl.config import cfg
 from virl.actions.check_surrounding.visual_checker import VisualChecker
 from virl.actions.navigation import build_navigator
-from virl.utils import common_utils, geocode_utils
+from virl.utils import common_utils, geocode_utils, vis_utils
 
 
 class BMStreetLoc(TaskTemplate):
@@ -128,10 +128,11 @@ class BMStreetLoc(TaskTemplate):
         num_matched_place = len(self.matched_places)
         
         table = PrettyTable()
-        table.field_names = ['method', '# total_place', '# TP', '# Category-agnostic TP', 'accuracy', 'recall']
+        table.field_names = ['method', '# total_place', '# TP', '# Category-agnostic TP', 'accuracy', 'recall', 'R']
         table.add_row(['non-active', num_total_place, num_detected_place, num_matched_place,
                        f'{num_detected_place / max(num_matched_place, 1e-6):.2f}',
-                       f'{num_matched_place / max(num_total_place, 1e-6):.2f}'
+                       f'{num_matched_place / max(num_total_place, 1e-6):.2f}',
+                       f'{num_detected_place / max(num_total_place, 1e-6):.3f}'
                        ])
         if self.has_active_detect:
             table.add_row([
@@ -151,12 +152,15 @@ class BMStreetLoc(TaskTemplate):
             print('active detection results:')
             self.formulate_category_output(self.active_matched_places, self.active_detected_places)
 
+        if not hasattr(self, 'matched_places_city'):
+            return
+        
         self.formulate_specific_output('city', self.matched_places_city, self.detected_places_city, self.place_infos_city)
         self.formulate_specific_output('continent', self.matched_places_continent, self.detected_places_continent, self.place_infos_continent)
 
     def formulate_category_output(self, matched_places, detected_places):
         table = PrettyTable()
-        table.field_names = ['category', '# total', '# TP', '# Category-agnostic TP', 'accuracy', 'recall']
+        table.field_names = ['category', '# total', '# TP', '# Category-agnostic TP', 'accuracy', 'recall', 'R']
         
         total = common_utils.count_place_types(self.place_infos, self.place_types)
         matched = {}
@@ -173,12 +177,32 @@ class BMStreetLoc(TaskTemplate):
                     detected[pred_type] = detected.get(pred_type, 0) + 1
                     cur_pred_types.append(pred_type)
         
+        accuracy_list = []
+        recall_list = []
+        r_list = []
         for type in total.keys():
+            type_acc = detected.get(type, 0) / matched.get(type, 1e-6)
+            type_recall = matched.get(type, 0) / max(total[type], 1e-6)
+            type_r = detected.get(type, 0) / max(total[type], 1e-6)
+            
             table.add_row([
                 type, total[type], detected.get(type, 0),  matched.get(type, 0),
-                f'{detected.get(type, 0) / matched.get(type, 1e-6):.2f}',
-                f'{matched.get(type, 0) / total[type]:.2f}'
+                f'{type_acc:.3f}',
+                f'{type_recall:.3f}',
+                f'{type_r:.3f}'
             ])
+            accuracy_list.append(type_acc)
+            recall_list.append(type_recall)
+            r_list.append(type_r)
+        
+        # add average row
+        table.add_row([
+            'average', np.average(list(total.values())),
+            np.average(list(detected.values())), np.average(list(matched.values())),
+            f'{np.average(accuracy_list):.3f}',
+            f'{np.average(recall_list):.3f}',
+            f'{np.average(r_list):.3f}'
+        ])
         
         print(table)
         # export table to csv
@@ -257,6 +281,17 @@ class BMStreetLoc(TaskTemplate):
         
         # filter place infos to remove those not near the street views.
         self.place_infos = self.filter_place_info_by_distance(filtered_place_infos, data_cfg)
+        # filter place infos to remove those with less than MIN_REVIEWS
+        self.place_infos = self.filter_by_n_reivews(self.place_infos, data_cfg)
+        
+    def filter_by_n_reivews(self, place_infos, data_cfg):
+        new_place_infos = {}
+
+        for i, (place_id, place) in enumerate(place_infos.items()):
+            if place['n_reviews'] >= data_cfg.MIN_REVIEWS:
+                new_place_infos[place_id] = place
+        
+        return new_place_infos
 
     def prepare_data_and_gt(self, data_cfg, platform):
         self.load_place_info(data_cfg, platform)
@@ -337,7 +372,7 @@ class BMStreetLoc(TaskTemplate):
 
             if not is_matched:
                 continue
-
+            
             if cfg.PIPELINE.get('DEBUG_IMAGE', False):
                 # draw the image with box
                 draw_results = {
@@ -346,7 +381,7 @@ class BMStreetLoc(TaskTemplate):
                     'scores': np.array([detect_results['scores'][i]]),
                     'class_idx': np.array([detect_results['class_idx'][i]])
                 }
-                result_image = common_utils.draw_with_results(detect_view.image, draw_results)
+                result_image = vis_utils.draw_with_results(detect_view.image, draw_results)
                 path = self.output_dir / 'debug_image' / f"{matched_place_info['place_id']}" / f'{self.step_counter}_{i}.jpg'
                 path.parent.mkdir(parents=True, exist_ok=True)
                 result_image.save(path)

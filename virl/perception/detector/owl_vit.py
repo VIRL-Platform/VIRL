@@ -2,8 +2,6 @@ from PIL import Image
 import torch
 import numpy as np
 
-from transformers import OwlViTProcessor, OwlViTForObjectDetection
-
 from virl.utils import common_utils, vis_utils
 
 
@@ -11,6 +9,7 @@ class OWLVIT(object):
     def __init__(self, cfg, **kwargs):
         self.model_name = cfg.MODEL_NAME
 
+        from transformers import OwlViTProcessor, OwlViTForObjectDetection
         self.processor = OwlViTProcessor.from_pretrained(self.model_name)
         self.model = OwlViTForObjectDetection.from_pretrained(self.model_name).cuda().eval()
 
@@ -21,8 +20,10 @@ class OWLVIT(object):
         inputs = self.processor(text=texts, images=image, return_tensors="pt")
         for _input in inputs:
             inputs[_input] = inputs[_input].cuda()
+            
         with torch.no_grad():
             outputs = self.model(**inputs)
+        
         for _output in outputs:
             if isinstance(outputs[_output], torch.Tensor):
                 outputs[_output] = outputs[_output].cpu()
@@ -34,6 +35,7 @@ class OWLVIT(object):
         i = 0  # Retrieve predictions for the first image for the corresponding text queries
         text = texts[i]
         boxes, scores, labels = results[i]["boxes"], results[i]["scores"], results[i]["labels"]
+        
         keep = np.where(scores > score_thresh)[0]
         boxes, scores, labels = boxes[keep], scores[keep], labels[keep]
 

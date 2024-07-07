@@ -26,7 +26,7 @@ class RouteNavigator(NavigatorTemplate):
         else:
             print('>>> RouteNavigator: sampling and relocate points in polygon area')
             seed_points = geocode_utils.grid_sample_quadrangle(self.polygon_area, cfg.SPACING)
-            relocated_points = geocode_utils.relocate_point_list_in_polygon(
+            relocated_points, _ = geocode_utils.relocate_point_list_in_polygon(
                 platform, seed_points, self.polygon_area
             )
             self.points = relocated_points
