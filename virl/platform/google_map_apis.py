@@ -36,10 +36,11 @@ class GoogleMapAPI(object):
         if offline_cfg.ENABLED:
             self.offline_cfg = offline_cfg
             self.init_offline(offline_cfg)
+            self.offline_mode = True
+        else:
+            self.offline_mode = False
     
     def init_offline(self, offline_cfg):
-        self.offline_mode = True
-        
         self.panorama_dir = offline_cfg.PANORAMA_DIR
         self.mapping_path = offline_cfg.GPS_TO_PANO_PATH
         
