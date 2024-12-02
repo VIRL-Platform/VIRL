@@ -64,11 +64,11 @@ Please refer to [FQA.md](./docs/FQA.md) to learn solution for some potential iss
 ### Citation
 If you find this project useful in your research, please consider cite:
 ```
-@article{yang2024virl,
-  title={{V-IRL: Grounding Virtual Intelligence in Real Life}},
+@inproceedings{yang2024virl,
+  title={V-irl: Grounding virtual intelligence in real life},
   author={Yang, Jihan and Ding, Runyu and Brown, Ellis and Qi, Xiaojuan and Xie, Saining},
-  year={2024},
-  journal={arXiv preprint arXiv:2402.03310},
+  booktitle={European conference on computer vision},
+  year={2024}
 }
 ```
 
